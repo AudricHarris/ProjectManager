@@ -1,3 +1,5 @@
+using Model.Items;
+
 public class Connection
 {
     private int id;
