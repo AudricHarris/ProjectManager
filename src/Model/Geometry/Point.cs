@@ -1,4 +1,4 @@
-namespace Model.Items
+namespace Model.Geometry
 {
 	public struct Point
 	{
