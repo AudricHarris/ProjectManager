@@ -29,7 +29,7 @@ namespace Model.Items
 		public bool containPoint(Point p)
 		{
 			return this.pos.X < p.X  && this.pos.Y < p.Y &&
-		       	p.X < this.pos.X + this.sizeX && p.Y < this.pos.Y + this.sizeY; 
+				p.X < this.pos.X + this.sizeX && p.Y < this.pos.Y + this.sizeY; 
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace Model.Containers
 		}
 
 		public Boolean removeItem(BoardItem item) 
-		{ 
+		{
 			if (item != null && this.lstItemProject.Contains(item))
 			{
 				this.lstItemProject.Remove(item);

@@ -14,22 +14,22 @@ namespace Model.Items
 			this.Y = y;
 		}
 
-    	// To String
-    	public override string ToString()
-    	{
-        	return $"({this.X},{this.Y})";
-    	}
+		// To String
+		public override string ToString()
+		{
+			return $"({this.X},{this.Y})";
+		}
 
-    	// methode static
+		// methode static
 
-    	public static Point add(Point p1, Point p2)
-    	{
-    		return new Point(p1.X + p2.X, p1.Y + p2.Y); 
-    	}
+		public static Point add(Point p1, Point p2)
+		{
+			return new Point(p1.X + p2.X, p1.Y + p2.Y); 
+		}
 
 		public static Point sub(Point p1, Point p2)
-    	{
-    		return new Point(p1.X - p2.X, p1.Y - p2.Y); 
-    	}
+		{
+			return new Point(p1.X - p2.X, p1.Y - p2.Y); 
+		}
 	}
 }
