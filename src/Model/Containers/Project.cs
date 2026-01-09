@@ -74,7 +74,7 @@ namespace Model.Containers
 			res += "\tDate [ " + this.dateCreation + " ]\n";
 			res += "\tDesc : " + this.desc + "\n";
 			
-			res += new string('-', 105);
+			res += new string('-', 105) + "\n";
 			
 			res += "Items\n";
 			foreach (BoardItem item in this.lstItemProject) 

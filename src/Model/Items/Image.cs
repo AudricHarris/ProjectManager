@@ -1,3 +1,5 @@
+using Model.Geometry;
+
 namespace Model.Items
 {
 	public class Image : BoardItem
@@ -22,5 +24,15 @@ namespace Model.Items
 		//----------------------//
 		public string getName() { return this.name; }
 		public string getpath() { return this.path; }
+
+		//----------------------//
+		//    Method Instance   //
+		//----------------------//
+		
+		override
+		public string ToString()
+		{
+			return "\t-" + this.name + "\n";
+		}
 	}
 }

@@ -1,3 +1,5 @@
+using Model.Geometry;
+
 namespace Model.Items
 {
 	public class StickyNote : BoardItem

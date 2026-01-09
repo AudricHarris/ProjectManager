@@ -32,7 +32,7 @@ public class Controller
 	override
 	public String ToString()
 	{
-		String res = "Controller : \n\n" + this.project.ToString();
+		String res = this.project.ToString();
 
 		return res;
 	}
@@ -40,6 +40,10 @@ public class Controller
 
 	public static void Main(String[] args)
 	{
+		Console.BackgroundColor = ConsoleColor.DarkBlue;
+		Console.WriteLine("\nController : \n");
+		Console.ResetColor();
+
 		Controller c = new Controller();
 		c.addImage("test.png");
 		c.addNote("youtube.com");
@@ -54,6 +58,10 @@ public class Controller
 		c.addImage("MattEnPrison.jpeg");
 
 		Console.WriteLine(c);
+
+		Console.BackgroundColor = ConsoleColor.DarkBlue;
+		Console.WriteLine("\nSerialize : \n");
+		Console.ResetColor();
 
 		c.saveProject();
 

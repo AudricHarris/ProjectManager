@@ -4,6 +4,7 @@ using Model.Containers;
 
 namespace Model
 {
+	// TODO: Choose Bitween ID search or Project search
 	public class	ProjectRepository
 	{
 		private static List<Project> listProject = new List<Project>();
@@ -33,9 +34,16 @@ namespace Model
 			options.WriteIndented = true;
 
 			string jsonString = JsonSerializer.Serialize(ProjectRepository.listProject, options);
+			
 			Console.WriteLine(jsonString);
+			
 			File.WriteAllText("Projects.json", jsonString);
-			return false;
+			
+			Console.ForegroundColor = ConsoleColor.Green;
+			Console.WriteLine("Success in saving to json");
+			Console.ResetColor();
+
+			return true;
 		}
 
 		public static List<Project> getLstProject()
@@ -45,6 +53,12 @@ namespace Model
 
 		public static Boolean deleteProject(int id)
 		{
+			if (id >= 0 && id < ProjectRepository.listProject.Count)
+			{
+				ProjectRepository.listProject.RemoveAt(id);
+				return true;
+			}
+
 			return false;
 		}
 	}
