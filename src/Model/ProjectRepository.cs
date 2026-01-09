@@ -1,23 +1,42 @@
+using System.Text.Json;
+
 using Model.Containers;
 
 namespace Model
 {
 	public class	ProjectRepository
 	{
-
+		private static List<Project> listProject = new List<Project>();
+	
 		public static Project? loadProject(int id)
 		{
+			if (id >= 0 && id < ProjectRepository.listProject.Count)
+				return ProjectRepository.listProject[id];
+
 			return null;
 		}
 
-		public static Boolean SaveProject(Project p)
+		public static Boolean saveProject(Project p)
 		{
+			if (!ProjectRepository.listProject.Contains(p))
+			{
+				ProjectRepository.listProject.Add(p);
+				return true;
+			}
+
+			return false;
+		}
+
+		public static Boolean serialize()
+		{
+			string jsonString = JsonSerializer.Serialize(ProjectRepository.listProject);
+			Console.WriteLine(jsonString);
 			return false;
 		}
 
 		public static List<Project> getLstProject()
 		{
-			return new List<Project>();
+			return ProjectRepository.listProject;
 		}
 
 		public static Boolean deleteProject(int id)
