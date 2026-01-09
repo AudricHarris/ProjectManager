@@ -2,7 +2,7 @@ namespace Model.Items
 {
 	public class StickyNote : BoardItem
 	{
-		private string text;
+		public string text { get; set; }
 
 		public StickyNote(string text) : base(0, new Point(), 0, 0, 0)
 		{

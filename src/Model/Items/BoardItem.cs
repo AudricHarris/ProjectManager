@@ -1,10 +1,12 @@
+using System.Text.Json.Serialization;
 
 namespace Model.Items
 {
-
+	[JsonDerivedType(typeof(StickyNote), typeDiscriminator: "StickyNote")]
+	[JsonDerivedType(typeof(Image), typeDiscriminator: "ImageFile")]
 	public abstract class BoardItem
 	{
-		private int id;
+		public int id { get; set; }
 		private Point pos;
 		private int sizeX;
 		private int sizeY;

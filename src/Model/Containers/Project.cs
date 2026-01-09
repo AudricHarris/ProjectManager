@@ -6,12 +6,12 @@ namespace Model.Containers
 	{
 		private static int nbProject = 0;
 
-		private int      id;
-		private string   name;
-		private string   desc;
-		private DateTime dateCreation;
+		public int       id { get; set; }
+		public string   name { get; set; }
+		public string   desc { get; set; } 
+		public DateTime dateCreation { get; set; }
 		
-		private List<BoardItem> lstItemProject;
+		public List<BoardItem> lstItemProject {get; set; }
 
 		//----------------------//
 		//    Constructors      //

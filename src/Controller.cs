@@ -20,6 +20,10 @@ public class Controller
 		this.project.addItem(new StickyNote(text));
 	}
 
+	public void addImage(string text)
+	{
+		this.project.addItem(new Image(text, "~/Documents/"));
+	}
 	public void saveProject()
 	{
 		ProjectRepository.saveProject(this.project);
@@ -37,7 +41,7 @@ public class Controller
 	public static void Main(String[] args)
 	{
 		Controller c = new Controller();
-		c.addNote("test.png");
+		c.addImage("test.png");
 		c.addNote("youtube.com");
 		c.addNote("trouver des enfants");
 		c.addNote("trouver des youtubeur minecraft");
@@ -47,7 +51,7 @@ public class Controller
 		c.saveProject();
 		c.setProject(new Project("Case prison", "Le feat avec norman a fait le bad buzz"));
 		c.addNote("EchaperPrison.mp3");
-		c.addNote("MattEnPrison.jpeg");
+		c.addImage("MattEnPrison.jpeg");
 
 		Console.WriteLine(c);
 

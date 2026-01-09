@@ -29,8 +29,12 @@ namespace Model
 
 		public static Boolean serialize()
 		{
-			string jsonString = JsonSerializer.Serialize(ProjectRepository.listProject);
+			var options = new JsonSerializerOptions();
+			options.WriteIndented = true;
+
+			string jsonString = JsonSerializer.Serialize(ProjectRepository.listProject, options);
 			Console.WriteLine(jsonString);
+			File.WriteAllText("Projects.json", jsonString);
 			return false;
 		}
 
