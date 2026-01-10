@@ -2,30 +2,33 @@ using Model.Containers;
 using Model.Items;
 using Model;
 
+/**
+ * Controller :
+ * Main link bitween view and Model
+ * The instance that is first started by the app
+ * Contains one attribtue project.
+ */
 public class Controller
 {
 	private Project? project;
 
-	public Controller()
-	{
-		this.project = null;
-	}
-	
+	public Controller()	{ this.project = null; }
+
+	//       SETTERS        //
 	public void setProject(Project? p) { this.project = p; }
 
+	//       GETTERS        //
 	public Project? getProject() { return this.project; }
 
-	public void addNote(string text)
+	//----------------------//
+	//   Instance methods   //
+	//----------------------//
+	public void addItem(BoardItem item)
 	{
 		if (this.project != null)
-			this.project.addItem(new StickyNote(text));
+			this.project.addItem(item);
 	}
 
-	public void addImage(string text)
-	{
-		if (this.project != null)
-			this.project.addItem(new Image(text, "~/Documents/"));
-	}
 	public void saveProject()
 	{
 		if (this.project != null)
@@ -44,6 +47,9 @@ public class Controller
 	}
 
 
+	//----------------------//
+	//    Static Methods    //
+	//----------------------//
 	public static void Main(String[] args)
 	{
 		Console.BackgroundColor = ConsoleColor.DarkBlue;

@@ -2,6 +2,11 @@ using Model.Geometry;
 
 namespace Model.Items
 {
+	/**
+	 * Sticky note :
+	 * Extends board item
+	 * handles text objects like list
+	 */
 	public class StickyNote : BoardItem
 	{
 		public string text { get; set; }

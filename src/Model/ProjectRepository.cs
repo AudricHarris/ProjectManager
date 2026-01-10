@@ -5,6 +5,12 @@ using Model.Containers;
 namespace Model
 {
 	// TODO: Choose Bitween ID search or Project search
+	/**
+	 * Project Repository :
+	 * Handles Serializing and Deserializing
+	 * Loading and saving projects
+	 * called mainly by Controller
+	 */
 	public class	ProjectRepository
 	{
 		private static List<Project> listProject = new List<Project>();
@@ -48,6 +54,7 @@ namespace Model
 		public static Boolean deserialize()
 		{
 			var projectsJson = File.ReadAllText("Projects.json");
+			if (projectsJson == null) return false;
 
 			ProjectRepository.listProject = JsonSerializer.Deserialize<List<Project>>(projectsJson);
 			return true;

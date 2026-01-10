@@ -2,6 +2,11 @@ using Model.Items;
 
 namespace Model.Containers
 {
+	/**
+	 * Motivation :
+	 * Motivation are a Board item
+	 * Items can be tagged as motivation and will be shown to user
+	 */
 	public class Motivation
 	{
 		private static List<Motivation> lstItems = new List<Motivation>();

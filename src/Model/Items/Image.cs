@@ -2,6 +2,11 @@ using Model.Geometry;
 
 namespace Model.Items
 {
+	// TODO: Convert images to Array of bytes for serializing
+	/**
+	 * Image :
+	 * extends board item handles Image files
+	 */
 	public class Image : BoardItem
 	{
 		public string name { get; set; }

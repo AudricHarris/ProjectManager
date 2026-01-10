@@ -2,6 +2,12 @@ using Model.Items;
 
 namespace Model.Containers
 {
+	/**
+	 * Project : 
+	 * Each project has Defining traits {id, name, desc, date}
+	 * Projects store items and connections for the mind map
+	 * Each Project can be visualized as a mid map
+	 */
 	public class Project
 	{
 		private static int nbProject = 0;

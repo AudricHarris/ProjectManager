@@ -3,6 +3,10 @@ using Model.Geometry;
 
 namespace Model.Items
 {
+	/**
+	 * Board Item:
+	 * Abstract class that handles positioning and properties of an item
+	 */
 	[JsonDerivedType(typeof(StickyNote), typeDiscriminator: "StickyNote")]
 	[JsonDerivedType(typeof(Image), typeDiscriminator: "ImageFile")]
 	public abstract class BoardItem
@@ -23,7 +27,6 @@ namespace Model.Items
 			this.zIndex = zIndex;
 		}
 
-		// Methode Instances
 		public void updatePos(Point p)
 		{
 			this.pos = p;
