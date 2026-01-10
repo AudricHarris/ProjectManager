@@ -45,6 +45,13 @@ namespace Model
 
 			return true;
 		}
+		public static Boolean deserialize()
+		{
+			var projectsJson = File.ReadAllText("Projects.json");
+
+			ProjectRepository.listProject = JsonSerializer.Deserialize<List<Project>>(projectsJson);
+			return true;
+		}
 
 		public static List<Project> getLstProject()
 		{

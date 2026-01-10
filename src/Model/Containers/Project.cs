@@ -29,6 +29,17 @@ namespace Model.Containers
 
 		public Project(string nom, string desc) : this(nom, desc, DateTime.Now) {}
 		public Project(string nom) : this(nom, "") {}
+		public Project() : this("tmp") {}
+
+		//----------------------//
+		//       SETTERS        //
+		//----------------------//
+		public void setId(int id)        { this.id = id;          }
+		public void setName(string name) { this.name = name;      }
+		public void setDesc(string desc) { this.desc = desc;      }
+		public void setDate(DateTime d)  { this.dateCreation = d; }
+
+		public void setLstItemProject(List<BoardItem> lst) { this.lstItemProject = lst; }
 
 		//----------------------//
 		//       GETTERS        //
@@ -38,6 +49,8 @@ namespace Model.Containers
 		public string   getName() { return this.name;         }
 		public string   getDesc() { return this.desc;         }
 		public DateTime getDate() { return this.dateCreation; }
+
+		public List<BoardItem> getLstItemProject() { return this.lstItemProject; }
 
 		//----------------------//
 		//   Instance Methods   //

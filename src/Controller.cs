@@ -4,34 +4,40 @@ using Model;
 
 public class Controller
 {
-	private Project project;
+	private Project? project;
 
 	public Controller()
 	{
-		this.project = new Project("Mattfula .Feat norman", "La collab du sciecle entre deux personne qui aime un peu trop les enfants");
+		this.project = null;
 	}
 	
-	public void setProject(Project p) { this.project = p; }
+	public void setProject(Project? p) { this.project = p; }
 
-	public Project getProject() { return this.project; }
+	public Project? getProject() { return this.project; }
 
 	public void addNote(string text)
 	{
-		this.project.addItem(new StickyNote(text));
+		if (this.project != null)
+			this.project.addItem(new StickyNote(text));
 	}
 
 	public void addImage(string text)
 	{
-		this.project.addItem(new Image(text, "~/Documents/"));
+		if (this.project != null)
+			this.project.addItem(new Image(text, "~/Documents/"));
 	}
 	public void saveProject()
 	{
-		ProjectRepository.saveProject(this.project);
+		if (this.project != null)
+			ProjectRepository.saveProject(this.project);
 	}
 
 	override
 	public String ToString()
 	{
+		
+		if (this.project == null) return "";
+		
 		String res = this.project.ToString();
 
 		return res;
@@ -45,28 +51,14 @@ public class Controller
 		Console.ResetColor();
 
 		Controller c = new Controller();
-		c.addImage("test.png");
-		c.addNote("youtube.com");
-		c.addNote("trouver des enfants");
-		c.addNote("trouver des youtubeur minecraft");
 
+		ProjectRepository.deserialize();
+		
+		c.setProject(ProjectRepository.loadProject(0));
 		Console.WriteLine(c);
 
-		c.saveProject();
-		c.setProject(new Project("Case prison", "Le feat avec norman a fait le bad buzz"));
-		c.addNote("EchaperPrison.mp3");
-		c.addImage("MattEnPrison.jpeg");
-
+		c.setProject(ProjectRepository.loadProject(1));
 		Console.WriteLine(c);
-
-		Console.BackgroundColor = ConsoleColor.DarkBlue;
-		Console.WriteLine("\nSerialize : \n");
-		Console.ResetColor();
-
-		c.saveProject();
-
-		ProjectRepository.serialize();
-
 	}
 
 }
