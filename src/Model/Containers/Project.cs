@@ -12,9 +12,9 @@ namespace Model.Containers
 	{
 		private static int nbProject = 0;
 
-		public int       id { get; set; }
-		public string   name { get; set; }
-		public string   desc { get; set; } 
+		public int id { get; set; }
+		public string name { get; set; }
+		public string desc { get; set; } 
 		public DateTime dateCreation { get; set; }
 		
 		public List<BoardItem> lstItemProject {get; set; }
