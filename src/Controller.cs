@@ -1,6 +1,8 @@
 using Model.Containers;
 using Model.Items;
 using Model;
+using View;
+using Avalonia;
 
 /**
  * Controller :
@@ -65,6 +67,13 @@ public class Controller
 
 		c.setProject(ProjectRepository.loadProject(1));
 		Console.WriteLine(c);
+		Controller.BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+		new MainWindow();
 	}
-
+	
+	public static AppBuilder BuildAvaloniaApp()
+		=> AppBuilder.Configure<App>()
+			.UsePlatformDetect()   // ← Critical for Linux (registers IWindowingPlatform)
+			.WithInterFont()
+			.LogToTrace();
 }
