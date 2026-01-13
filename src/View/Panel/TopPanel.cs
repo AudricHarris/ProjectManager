@@ -10,7 +10,7 @@ namespace View.Panel
 	{
 		public TopPanel()
 		{
-			Background = Brushes.LightBlue;
+			Background = Brushes.RoyalBlue;
 			Orientation = Orientation.Horizontal;
 			HorizontalAlignment = HorizontalAlignment.Stretch;
 			Height = 60;
