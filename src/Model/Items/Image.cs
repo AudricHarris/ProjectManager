@@ -9,26 +9,26 @@ namespace Model.Items
 	 */
 	public class Image : BoardItem
 	{
-		public string name { get; set; }
-		public string path { get; set; }
+		public string Name { get; set; }
+		public string Path { get; set; }
 
 		public Image(string name, string path) : base(0, new Point(), 0, 0, 0)
 		{
-			this.name = name;
-			this.path = path;
+			this.Name = name;
+			this.Path = path;
 		}
 
 		//----------------------//
 		//       SETTERS        //
 		//----------------------//
-		public void setName(string name) { this.name = name; }
-		public void setPath(string path) { this.path = path; }
+		public void SetName(string name) { this.Name = name; }
+		public void SetPath(string path) { this.Path = path; }
 		
 		//----------------------//
 		//       GETTERS        //
 		//----------------------//
-		public string getName() { return this.name; }
-		public string getpath() { return this.path; }
+		public string GetName() { return this.Name; }
+		public string Getpath() { return this.Path; }
 
 		//----------------------//
 		//    Method Instance   //
@@ -37,7 +37,7 @@ namespace Model.Items
 		override
 		public string ToString()
 		{
-			return "\t-" + this.name + "\n";
+			return "\t-" + this.Name + "\n";
 		}
 	}
 }

@@ -9,17 +9,17 @@ namespace Model.Items
 	 */
 	public class StickyNote : BoardItem
 	{
-		public string text { get; set; }
+		public string Text { get; set; }
 
 		public StickyNote(string text) : base(0, new Point(), 0, 0, 0)
 		{
-			this.text = text;
+			this.Text = text;
 		}
 
 		override
 		public string ToString()
 		{
-			return "\t-" + this.text + "\n";
+			return "\t-" + this.Text + "\n";
 		}
 	}
 }

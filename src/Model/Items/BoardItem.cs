@@ -11,31 +11,31 @@ namespace Model.Items
 	[JsonDerivedType(typeof(Image), typeDiscriminator: "ImageFile")]
 	public abstract class BoardItem
 	{
-		public int id { get; set; }
-		private Point pos;
-		private int sizeX;
-		private int sizeY;
-		private int zIndex;
+		public int Id { get; set; }
+		private Point _pos;
+		private int _sizeX;
+		private int _sizeY;
+		private int _zIndex;
 
 		// Constructeurs
 		public BoardItem(int id, Point pos, int sizeX, int sizeY, int zIndex)
 		{
-			this.id = id;
-			this.pos = pos;
-			this.sizeX = sizeX;
-			this.sizeY = sizeY;
-			this.zIndex = zIndex;
+			this.Id = id;
+			this._pos = pos;
+			this._sizeX = sizeX;
+			this._sizeY = sizeY;
+			this._zIndex = zIndex;
 		}
 
-		public void updatePos(Point p)
+		public void UpdatePos(Point p)
 		{
-			this.pos = p;
+			this._pos = p;
 		}
 
-		public bool containPoint(Point p)
+		public bool ContainPoint(Point p)
 		{
-			return this.pos.X < p.X  && this.pos.Y < p.Y &&
-				p.X < this.pos.X + this.sizeX && p.Y < this.pos.Y + this.sizeY; 
+			return this._pos.X < p.X  && this._pos.Y < p.Y &&
+				p.X < this._pos.X + this._sizeX && p.Y < this._pos.Y + this._sizeY; 
 		}
 	}
 }

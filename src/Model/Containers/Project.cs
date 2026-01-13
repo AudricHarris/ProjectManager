@@ -12,12 +12,12 @@ namespace Model.Containers
 	{
 		private static int nbProject = 0;
 
-		public int id { get; set; }
-		public string name { get; set; }
-		public string desc { get; set; } 
-		public DateTime dateCreation { get; set; }
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public string Desc { get; set; } 
+		public DateTime DateCreation { get; set; }
 		
-		public List<BoardItem> lstItemProject {get; set; }
+		public List<BoardItem> LstItemProject {get; set; }
 
 		//----------------------//
 		//    Constructors      //
@@ -25,12 +25,12 @@ namespace Model.Containers
 
 		public Project(string name, string desc, DateTime dateCreation)
 		{
-			this.id   = ++nbProject;
-			this.name = name;
-			this.desc = desc;
-			this.dateCreation = dateCreation;
+			this.Id   = ++nbProject;
+			this.Name = name;
+			this.Desc = desc;
+			this.DateCreation = dateCreation;
 
-			this.lstItemProject = new List<BoardItem>();
+			this.LstItemProject = new List<BoardItem>();
 		}
 
 		public Project(string nom, string desc) : this(nom, desc, DateTime.Now) {}
@@ -40,44 +40,44 @@ namespace Model.Containers
 		//----------------------//
 		//       SETTERS        //
 		//----------------------//
-		public void setId(int id)        { this.id = id;          }
-		public void setName(string name) { this.name = name;      }
-		public void setDesc(string desc) { this.desc = desc;      }
-		public void setDate(DateTime d)  { this.dateCreation = d; }
+		public void SetId(int id)        { this.Id = id;          }
+		public void SetName(string name) { this.Name = name;      }
+		public void SetDesc(string desc) { this.Desc = desc;      }
+		public void SetDate(DateTime d)  { this.DateCreation = d; }
 
-		public void setLstItemProject(List<BoardItem> lst) { this.lstItemProject = lst; }
+		public void SetLstItemProject(List<BoardItem> lst) { this.LstItemProject = lst; }
 
 		//----------------------//
 		//       GETTERS        //
 		//----------------------//
 
-		public int      getId  () { return this.id;           }
-		public string   getName() { return this.name;         }
-		public string   getDesc() { return this.desc;         }
-		public DateTime getDate() { return this.dateCreation; }
+		public int      GetId  () { return this.Id;           }
+		public string   GetName() { return this.Name;         }
+		public string   GetDesc() { return this.Desc;         }
+		public DateTime GetDate() { return this.DateCreation; }
 
-		public List<BoardItem> getLstItemProject() { return this.lstItemProject; }
+		public List<BoardItem> GetLstItemProject() { return this.LstItemProject; }
 
 		//----------------------//
 		//   Instance Methods   //
 		//----------------------//
 		
 
-		public Boolean addItem(BoardItem item) 
+		public Boolean AddItem(BoardItem item) 
 		{ 
-			if (item != null && !this.lstItemProject.Contains(item)) 
+			if (item != null && !this.LstItemProject.Contains(item)) 
 			{
-				this.lstItemProject.Add(item); 
+				this.LstItemProject.Add(item); 
 				return true;
 			}
 			return false;
 		}
 
-		public Boolean removeItem(BoardItem item) 
+		public Boolean RemoveItem(BoardItem item) 
 		{
-			if (item != null && this.lstItemProject.Contains(item))
+			if (item != null && this.LstItemProject.Contains(item))
 			{
-				this.lstItemProject.Remove(item);
+				this.LstItemProject.Remove(item);
 				return true;
 			}
 			return false;
@@ -89,14 +89,14 @@ namespace Model.Containers
 			String res = new string('-', 105) + "\n";
 			
 			res += "Project\n";
-			res += "\tName : " + this.name + "\n";
-			res += "\tDate [ " + this.dateCreation + " ]\n";
-			res += "\tDesc : " + this.desc + "\n";
+			res += "\tName : " + this.Name + "\n";
+			res += "\tDate [ " + this.DateCreation + " ]\n";
+			res += "\tDesc : " + this.Desc + "\n";
 			
 			res += new string('-', 105) + "\n";
 			
 			res += "Items\n";
-			foreach (BoardItem item in this.lstItemProject) 
+			foreach (BoardItem item in this.LstItemProject) 
 				res += item.ToString();
 
 			res += new string('-', 105);

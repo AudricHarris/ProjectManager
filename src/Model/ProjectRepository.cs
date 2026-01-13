@@ -11,35 +11,35 @@ namespace Model
 	 * Loading and saving projects
 	 * called mainly by Controller
 	 */
-	public class	ProjectRepository
+	public class ProjectRepository
 	{
-		private static List<Project> listProject = new List<Project>();
+		private static List<Project> s_listProject = new List<Project>();
 	
-		public static Project? loadProject(int id)
+		public static Project? LoadProject(int id)
 		{
-			if (id >= 0 && id < ProjectRepository.listProject.Count)
-				return ProjectRepository.listProject[id];
+			if (id >= 0 && id < ProjectRepository.s_listProject.Count)
+				return ProjectRepository.s_listProject[id];
 
 			return null;
 		}
 
-		public static Boolean saveProject(Project p)
+		public static Boolean SaveProject(Project p)
 		{
-			if (!ProjectRepository.listProject.Contains(p))
+			if (!ProjectRepository.s_listProject.Contains(p))
 			{
-				ProjectRepository.listProject.Add(p);
+				ProjectRepository.s_listProject.Add(p);
 				return true;
 			}
 
 			return false;
 		}
 
-		public static Boolean serialize()
+		public static Boolean Serialize()
 		{
 			var options = new JsonSerializerOptions();
 			options.WriteIndented = true;
 
-			string jsonString = JsonSerializer.Serialize(ProjectRepository.listProject, options);
+			string jsonString = JsonSerializer.Serialize(ProjectRepository.s_listProject, options);
 			
 			Console.WriteLine(jsonString);
 			
@@ -51,25 +51,25 @@ namespace Model
 
 			return true;
 		}
-		public static Boolean deserialize()
+		public static Boolean Deserialize()
 		{
 			var projectsJson = File.ReadAllText("Projects.json");
 			if (projectsJson == null) return false;
 
-			ProjectRepository.listProject = JsonSerializer.Deserialize<List<Project>>(projectsJson);
+			ProjectRepository.s_listProject = JsonSerializer.Deserialize<List<Project>>(projectsJson);
 			return true;
 		}
 
-		public static List<Project> getLstProject()
+		public static List<Project> GetLstProject()
 		{
-			return ProjectRepository.listProject;
+			return ProjectRepository.s_listProject;
 		}
 
-		public static Boolean deleteProject(int id)
+		public static Boolean DeleteProject(int id)
 		{
-			if (id >= 0 && id < ProjectRepository.listProject.Count)
+			if (id >= 0 && id < ProjectRepository.s_listProject.Count)
 			{
-				ProjectRepository.listProject.RemoveAt(id);
+				ProjectRepository.s_listProject.RemoveAt(id);
 				return true;
 			}
 

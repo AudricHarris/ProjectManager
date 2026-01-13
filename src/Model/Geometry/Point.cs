@@ -22,12 +22,12 @@ namespace Model.Geometry
 
 		// methode static
 
-		public static Point add(Point p1, Point p2)
+		public static Point Add(Point p1, Point p2)
 		{
 			return new Point(p1.X + p2.X, p1.Y + p2.Y); 
 		}
 
-		public static Point sub(Point p1, Point p2)
+		public static Point Sub(Point p1, Point p2)
 		{
 			return new Point(p1.X - p2.X, p1.Y - p2.Y); 
 		}

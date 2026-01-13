@@ -9,17 +9,17 @@ namespace Model.Containers
 	 */
 	public class Motivation
 	{
-		private static List<Motivation> lstItems = new List<Motivation>();
+		private static List<Motivation> _lstItems = new List<Motivation>();
 
-		private int        id;
-		private string     name;
-		private BoardItem? content;
+		private int        _id;
+		private string     _name;
+		private BoardItem? _content;
 
 		public Motivation(int id, string nom, BoardItem? item)
 		{
-			this.id = id;
-			this.name = nom;
-			this.content = item;
+			this._id = id;
+			this._name = nom;
+			this._content = item;
 		}
 
 

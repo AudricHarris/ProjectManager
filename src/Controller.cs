@@ -12,42 +12,41 @@ using Avalonia;
  */
 public class Controller
 {
-	private Project? project;
+	private Project? _project;
 
-	public Controller()	{ this.project = null; }
+	public Controller()	{ this._project = null; }
 
 	//       SETTERS        //
-	public void setProject(Project? p) { this.project = p; }
+	public void SetProject(Project? p) { this._project = p; }
 
 	//       GETTERS        //
-	public Project? getProject() { return this.project; }
+	public Project? GetProject() { return this._project; }
 
 	//----------------------//
 	//   Instance methods   //
 	//----------------------//
-	public void addItem(BoardItem item)
+	public void AddItem(BoardItem item)
 	{
-		if (this.project != null)
-			this.project.addItem(item);
+		if (this._project != null)
+			this._project.AddItem(item);
 	}
 
-	public void saveProject()
+	public void SaveProject()
 	{
-		if (this.project != null)
-			ProjectRepository.saveProject(this.project);
+		if (this._project != null)
+			ProjectRepository.SaveProject(this._project);
 	}
 
 	override
 	public String ToString()
 	{
 		
-		if (this.project == null) return "";
+		if (this._project == null) return "";
 		
-		String res = this.project.ToString();
+		String res = this._project.ToString();
 
 		return res;
 	}
-
 
 	//----------------------//
 	//    Static Methods    //
@@ -60,20 +59,20 @@ public class Controller
 
 		Controller c = new Controller();
 
-		ProjectRepository.deserialize();
+		ProjectRepository.Deserialize();
 		
-		c.setProject(ProjectRepository.loadProject(0));
+		c.SetProject(ProjectRepository.LoadProject(0));
 		Console.WriteLine(c);
 
-		c.setProject(ProjectRepository.loadProject(1));
+		c.SetProject(ProjectRepository.LoadProject(1));
 		Console.WriteLine(c);
 		Controller.BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 		new MainWindow();
 	}
 	
 	public static AppBuilder BuildAvaloniaApp()
-		=> AppBuilder.Configure<App>()
-			.UsePlatformDetect()   // ← Critical for Linux (registers IWindowingPlatform)
+		=> AppBuilder.Configure<Init>()
+			.UsePlatformDetect()
 			.WithInterFont()
 			.LogToTrace();
 }
