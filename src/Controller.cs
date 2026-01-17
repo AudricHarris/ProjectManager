@@ -21,6 +21,7 @@ public class Controller
 
 	//       GETTERS        //
 	public Project? GetProject() { return this._project; }
+	public List<Project> getListProject() { return ProjectRepository.GetLstProject();}
 
 	//----------------------//
 	//   Instance methods   //
@@ -66,8 +67,9 @@ public class Controller
 
 		c.SetProject(ProjectRepository.LoadProject(1));
 		Console.WriteLine(c);
+
+		MainWindow.SCtrl = c;
 		Controller.BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-		new MainWindow();
 	}
 	
 	public static AppBuilder BuildAvaloniaApp()

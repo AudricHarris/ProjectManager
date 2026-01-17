@@ -3,13 +3,15 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 
+using Model.Containers;
+using View.Systems;
+
 namespace View.Panel
 {
 	public class MenuPanel : StackPanel
 	{
-		public MenuPanel()
+		public MenuPanel(MainWindow window, List<Project> lstProjects, MouseManager mm )
 		{
-			Background = Brushes.DarkSlateGray;
 
 			StackPanel menu = new StackPanel
 			{
@@ -18,33 +20,118 @@ namespace View.Panel
 				HorizontalAlignment = HorizontalAlignment.Center,
 				VerticalAlignment = VerticalAlignment.Center
 			};
-
-			Grid outerGrid = new Grid();
-			outerGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
-			outerGrid.VerticalAlignment = VerticalAlignment.Stretch;
-
-			var buttonPanel = new StackPanel
+			// Title
+			menu.Children.Add(new TextBlock
 			{
-				Orientation = Orientation.Vertical,
-				Spacing = 20,
+				Text = "List Project :",
+				FontSize = 30,
+				Foreground = Brushes.Black,
 				HorizontalAlignment = HorizontalAlignment.Center,
-				VerticalAlignment = VerticalAlignment.Center
-			};
+				Margin = new Thickness(0, 20, 0, 30)
+            });
 
-			Button p1 = new Button { Content = "Norman", Width = 150, Height = 50 };
-			Button p2 = new Button { Content = "Matt", Width = 150, Height = 50 };
-			Button p3 = new Button { Content = "WQLF", Width = 150, Height = 50 };
+			StackPanel projectsContainer = new StackPanel
+            {
+                Orientation = Orientation.Vertical,
+                Spacing = 15,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Margin = new Thickness(40, 0, 40, 20)
+            };
 
-			buttonPanel.Children.Add(p1);
-			buttonPanel.Children.Add(p2);
-			buttonPanel.Children.Add(p3);
+            foreach (Project p in lstProjects)
+            {
+                // Main button acting as a "card" for the project
+                Button projectButton = new Button
+                {
+                    Width = 800,
+                    Height = 100,
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                    VerticalContentAlignment = VerticalAlignment.Center,
+                    CornerRadius = new CornerRadius(12),
+                    Background = new SolidColorBrush(Color.Parse("#2D2D3D")), // Dark modern background
+                    Padding = new Thickness(20),
+                    Margin = new Thickness(0, 5, 0, 5)
+                };
 
-			menu.Children.Add(new TextBlock{Text="List Project : ", FontSize = 30});
+                // Grid inside button to organize content: left info + right date
+                Grid contentGrid = new Grid();
+                contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-			outerGrid.Children.Add(buttonPanel);
-			menu.Children.Add(outerGrid);
+                // Left side: Name and Description
+                StackPanel leftInfo = new StackPanel
+                {
+                    Spacing = 6,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
 
-			Children.Add(menu);
-		}
+                leftInfo.Children.Add(new TextBlock
+                {
+                    Text = p.Name,
+                    FontSize = 20,
+                    FontWeight = FontWeight.Bold,
+                    Foreground = Brushes.White
+                });
+
+                leftInfo.Children.Add(new TextBlock
+                {
+                    Text = p.Desc,
+                    FontSize = 14,
+                    Foreground = Brushes.LightGray,
+                    TextWrapping = TextWrapping.Wrap
+                });
+
+                Grid.SetColumn(leftInfo, 0);
+
+                // Right side: Date
+                TextBlock dateBlock = new TextBlock
+                {
+                    Text = p.DateCreation.ToString("dd MMM yyyy"),
+                    FontSize = 14,
+                    Foreground = Brushes.Cyan,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(20, 0, 0, 0)
+                };
+
+                Grid.SetColumn(dateBlock, 2);
+
+                contentGrid.Children.Add(leftInfo);
+                contentGrid.Children.Add(dateBlock);
+
+                projectButton.Content = contentGrid;
+
+                // Optional: hover effect
+                projectButton.Classes.Add("projectCard"); // You can define styles later if you want
+
+                projectsContainer.Children.Add(projectButton);
+            }
+            
+            Button newProject = new Button
+            {
+            	Content = "New Project",
+            	FontWeight = FontWeight.Bold,
+            	FontSize = 20,
+            	Foreground = Brushes.LightGray,
+                Width = 200,
+                Height = 100,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                CornerRadius = new CornerRadius(12),
+                Background = new SolidColorBrush(Color.Parse("#40a042")),
+                Padding = new Thickness(20),
+                Margin = new Thickness(0, 5, 0, 5)
+            };
+
+            newProject.Click += mm.NewProject_OnClick;
+
+            menu.Children.Add(projectsContainer);
+            menu.Children.Add(newProject);
+            Children.Add(menu);
+
+
+        }
+
 	}
 }
