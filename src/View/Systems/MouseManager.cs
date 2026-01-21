@@ -1,6 +1,7 @@
-using Avalonia.Interactivity;
 
 using View.Panel;
+
+using Model.Containers;
 
 namespace View.Systems
 {
@@ -13,10 +14,19 @@ namespace View.Systems
 			this.MainWindow = window;
 		}
 		
-		public void NewProject_OnClick(object? sender, RoutedEventArgs e)
+        public void NewProjectEvent()
         {
-    	        Console.WriteLine("Clicked in MouseManager");
-    	        this.MainWindow.SwitchPanel(new NewProjectPanel());
+	        this.MainWindow.SwitchPanel(new NewProjectPanel(this));
+        }
+
+        public void CreateUpdateProject(Project? p, String name = "", String? desc = "")
+        {
+			if ( p == null && MainWindow.SCtrl != null)
+			{
+				MainWindow.SCtrl.SetProject(new Project(name, desc));
+				MainWindow.SCtrl.SaveProject();
+				this.MainWindow.SwitchPanel(new MenuPanel(this.MainWindow, MainWindow.SCtrl.getListProject(), this));
+			}
         }
 	}
 }

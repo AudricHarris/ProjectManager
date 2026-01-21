@@ -2,14 +2,21 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Interactivity;
 
+using View.Systems;
 
 namespace View.Panel
 {
 	public class NewProjectPanel : StackPanel
 	{
-		public NewProjectPanel()
+	    private MouseManager mm;
+	    private TextBox title;
+	    private TextBox desc;
+
+		public NewProjectPanel(MouseManager mm)
 		{
+            this.mm = mm;
 
 			StackPanel menu = new StackPanel
 			{
@@ -21,20 +28,21 @@ namespace View.Panel
 			// Title
 			menu.Children.Add(new TextBlock
 			{
-				Text = "Test :",
+				Text = "Create Project :",
 				FontSize = 30,
 				Foreground = Brushes.Black,
 				HorizontalAlignment = HorizontalAlignment.Center,
 				Margin = new Thickness(0, 20, 0, 30)
             });
 
-			StackPanel projectsContainer = new StackPanel
-            {
-                Orientation = Orientation.Vertical,
-                Spacing = 15,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                Margin = new Thickness(40, 0, 40, 20)
-            };
+
+            menu.Children.Add(new TextBlock{Text = "Project Name"});
+            this.title = new TextBox{Width = 300, Height = 40, HorizontalAlignment = HorizontalAlignment.Left, FontSize = 20};
+            menu.Children.Add(this.title);
+
+            menu.Children.Add(new TextBlock{Text = "Project Description"});
+            this.desc = new TextBox{Width = 500, Height = 200, FontSize = 20, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap};
+            menu.Children.Add(this.desc);
 
             Button newProject = new Button
             {
@@ -53,9 +61,15 @@ namespace View.Panel
                 Margin = new Thickness(0, 5, 0, 5)
             };
 
-            menu.Children.Add(projectsContainer);
+            newProject.Click += this.UpdateProject_OnClick;
+
             menu.Children.Add(newProject);
             Children.Add(menu);
+        }
+
+		public void UpdateProject_OnClick(object? sender, RoutedEventArgs e)
+        {
+    	        mm.CreateUpdateProject(null, this.title.Text, this.desc.Text );
         }
 	}
 }

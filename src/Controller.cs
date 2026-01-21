@@ -35,7 +35,10 @@ public class Controller
 	public void SaveProject()
 	{
 		if (this._project != null)
+		{
 			ProjectRepository.SaveProject(this._project);
+			ProjectRepository.Serialize();
+		}
 	}
 
 	override
@@ -62,11 +65,8 @@ public class Controller
 
 		ProjectRepository.Deserialize();
 		
-		c.SetProject(ProjectRepository.LoadProject(0));
-		Console.WriteLine(c);
-
-		c.SetProject(ProjectRepository.LoadProject(1));
-		Console.WriteLine(c);
+		foreach(Project p in c.getListProject())
+			Console.WriteLine(p);
 
 		MainWindow.SCtrl = c;
 		Controller.BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);

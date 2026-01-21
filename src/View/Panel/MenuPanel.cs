@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Interactivity;
 
 using Model.Containers;
 using View.Systems;
@@ -10,8 +11,11 @@ namespace View.Panel
 {
 	public class MenuPanel : StackPanel
 	{
+	    private MouseManager mm;
+
 		public MenuPanel(MainWindow window, List<Project> lstProjects, MouseManager mm )
 		{
+            this.mm = mm;
 
 			StackPanel menu = new StackPanel
 			{
@@ -124,13 +128,18 @@ namespace View.Panel
                 Margin = new Thickness(0, 5, 0, 5)
             };
 
-            newProject.Click += mm.NewProject_OnClick;
+            newProject.Click += this.NewProject_OnClick;
 
             menu.Children.Add(projectsContainer);
             menu.Children.Add(newProject);
             Children.Add(menu);
 
 
+        }
+
+		public void NewProject_OnClick(object? sender, RoutedEventArgs e)
+        {
+    	        mm.NewProjectEvent();
         }
 
 	}
