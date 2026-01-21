@@ -26,21 +26,14 @@ namespace View.Panel
 				VerticalAlignment = VerticalAlignment.Center
 			};
 			// Title
-			menu.Children.Add(new TextBlock
-			{
-				Text = "Create Project :",
-				FontSize = 30,
-				Foreground = Brushes.Black,
-				HorizontalAlignment = HorizontalAlignment.Center,
-				Margin = new Thickness(0, 20, 0, 30)
-            });
+			menu.Children.Add(SystemStyle.GenerateTitle("Create Project"));
 
 
-            menu.Children.Add(new TextBlock{Text = "Project Name"});
+            menu.Children.Add(SystemStyle.GenerateText("Project Name"));
             this.title = new TextBox{Width = 300, Height = 40, HorizontalAlignment = HorizontalAlignment.Left, FontSize = 20};
             menu.Children.Add(this.title);
 
-            menu.Children.Add(new TextBlock{Text = "Project Description"});
+            menu.Children.Add(SystemStyle.GenerateText("Project Description"));
             this.desc = new TextBox{Width = 500, Height = 200, FontSize = 20, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap};
             menu.Children.Add(this.desc);
 
