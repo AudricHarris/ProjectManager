@@ -19,7 +19,7 @@ namespace View.Systems
 	        this.MainWindow.SwitchPanel(new NewProjectPanel(this));
         }
 
-        public void CreateUpdateProject(Project? p, String name = "", String? desc = "")
+        public void CreateUpdateProject(Project? p, String name, String desc)
         {
 			if ( p == null && MainWindow.SCtrl != null)
 			{

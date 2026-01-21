@@ -53,6 +53,7 @@ namespace Model
 		}
 		public static Boolean Deserialize()
 		{
+			if (!File.Exists("Projects.json")) return false;
 			var projectsJson = File.ReadAllText("Projects.json");
 			if (projectsJson == null) return false;
 
