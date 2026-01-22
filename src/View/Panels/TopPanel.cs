@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 
+using View.Systems;
 
 namespace View.Panels
 {
@@ -10,18 +11,11 @@ namespace View.Panels
 	{
 		public TopPanel()
 		{
-			Background = Brushes.RoyalBlue;
 			Orientation = Orientation.Horizontal;
 			HorizontalAlignment = HorizontalAlignment.Stretch;
 			Height = 60;
 			
-			TextBlock title = new TextBlock();
-
-			title.Text = "Project Manager";
-			title.FontSize = 24;
-			title.FontStyle = FontStyle.Oblique;
-			title.VerticalAlignment = VerticalAlignment.Center;
-			title.Margin = new Thickness(20);
+			TextBlock title = SystemStyle.GenerateTitle("Project Manager");
 
 			Children.Add(title);
 		}

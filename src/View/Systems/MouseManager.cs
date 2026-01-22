@@ -36,5 +36,10 @@ namespace View.Systems
         		this.MainWindow.SwitchPanel(new MindBoardPanel(p, this));
         	return p;
         }
+
+        public void CancelProject()
+        {
+			this.MainWindow.SwitchPanel(new MenuPanel(this.MainWindow, MainWindow.SCtrl.getListProject(), this));
+        }
 	}
 }

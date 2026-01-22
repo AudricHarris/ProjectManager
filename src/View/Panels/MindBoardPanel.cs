@@ -20,7 +20,13 @@ namespace View.Panels
 			this.p = p;
 			
 			TextBlock text = SystemStyle.GenerateTitle(p.GetName());
+			Canvas canva = new Canvas();
+			
+			this.Background = SystemStyle.Background;
+
+			DockPanel.SetDock(text, Dock.Top);
 			this.Children.Add(text);
+			this.Children.Add(canva);
         }
 
 		public void NewProject_OnClick(object? sender, RoutedEventArgs e)

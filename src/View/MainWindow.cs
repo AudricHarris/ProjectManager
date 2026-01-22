@@ -30,6 +30,9 @@ namespace View
 
 			DockPanel mainPanel = new DockPanel();
 			TopPanel tp = new TopPanel();
+			tp.Background = SystemStyle.TopBanner;
+			this.Background = SystemStyle.Background;
+
 			MenuPanel mp;
 			if (SCtrl != null)
 				mp = new MenuPanel(this, SCtrl.getListProject(),mm);

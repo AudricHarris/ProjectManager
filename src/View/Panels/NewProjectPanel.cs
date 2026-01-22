@@ -54,9 +54,28 @@ namespace View.Panels
                 Margin = new Thickness(0, 5, 0, 5)
             };
 
+            Button CancelProject = new Button
+            {
+            	Content = "Back",
+            	FontWeight = FontWeight.Bold,
+            	FontSize = 20,
+            	Foreground = Brushes.LightGray,
+                Width = 200,
+                Height = 100,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                CornerRadius = new CornerRadius(12),
+                Background = new SolidColorBrush(Color.Parse("#a04042")),
+                Padding = new Thickness(20),
+                Margin = new Thickness(0, 5, 0, 5)
+            };
+
             newProject.Click += this.UpdateProject_OnClick;
+            CancelProject.Click += this.Cancel_OnClick;
 
             menu.Children.Add(newProject);
+            menu.Children.Add(CancelProject);
             Children.Add(menu);
         }
 
@@ -64,5 +83,10 @@ namespace View.Panels
         {
     	        mm.CreateUpdateProject(null, this.title.Text, this.desc.Text );
         }
+
+		public void Cancel_OnClick(object? sender, RoutedEventArgs e)
+	    {
+	        mm.CancelProject();
+	    }
 	}
 }
