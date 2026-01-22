@@ -4,7 +4,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 
 
-namespace View.Panel
+namespace View.Panels
 {
 	public class TopPanel : StackPanel
 	{

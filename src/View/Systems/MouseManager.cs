@@ -1,5 +1,5 @@
 
-using View.Panel;
+using View.Panels;
 
 using Model.Containers;
 
@@ -27,6 +27,14 @@ namespace View.Systems
 				MainWindow.SCtrl.SaveProject();
 				this.MainWindow.SwitchPanel(new MenuPanel(this.MainWindow, MainWindow.SCtrl.getListProject(), this));
 			}
+        }
+
+        public Project? ProjectOpenEvent(Project? p)
+        {
+        	Console.WriteLine(p);
+        	if (p != null)
+        		this.MainWindow.SwitchPanel(new MindBoardPanel(p, this));
+        	return p;
         }
 	}
 }

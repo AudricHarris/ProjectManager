@@ -7,7 +7,7 @@ using Avalonia.Interactivity;
 using Model.Containers;
 using View.Systems;
 
-namespace View.Panel
+namespace View.Panels
 {
 	public class MindBoardPanel : DockPanel
 	{
@@ -18,7 +18,9 @@ namespace View.Panel
 		{
             this.mm = mm;
 			this.p = p;
-
+			
+			TextBlock text = SystemStyle.GenerateTitle(p.GetName());
+			this.Children.Add(text);
         }
 
 		public void NewProject_OnClick(object? sender, RoutedEventArgs e)

@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 
 using Avalonia.Markup.Xaml;
 
-using View.Panel;
+using View.Panels;
 using Model.Containers;
 using View.Systems;
 
@@ -16,7 +16,7 @@ namespace View
 	{
 		public static Controller? SCtrl {get;set;}
 		
-		public StackPanel Panel {get; set;}
+		public Panel Panel {get; set;}
 
 		public MainWindow()
 		{
@@ -45,7 +45,7 @@ namespace View
 
 		}
 
-		public void SwitchPanel(StackPanel panel)
+		public void SwitchPanel(Panel panel)
 		{
 			DockPanel? mainPanel = (DockPanel?) Content;
 			

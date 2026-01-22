@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 
 using View.Systems;
 
-namespace View.Panel
+namespace View.Panels
 {
 	public class NewProjectPanel : StackPanel
 	{

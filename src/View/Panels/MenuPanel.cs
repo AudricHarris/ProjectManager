@@ -7,7 +7,7 @@ using Avalonia.Interactivity;
 using Model.Containers;
 using View.Systems;
 
-namespace View.Panel
+namespace View.Panels
 {
 	public class MenuPanel : StackPanel
 	{
@@ -44,7 +44,6 @@ namespace View.Panel
 
             foreach (Project p in lstProjects)
             {
-                // Main button acting as a "card" for the project
                 Button projectButton = new Button
                 {
                     Width = 800,
@@ -109,6 +108,8 @@ namespace View.Panel
                 projectButton.Classes.Add("projectCard"); // You can define styles later if you want
 
                 projectsContainer.Children.Add(projectButton);
+                projectButton.Tag = p;
+                projectButton.Click += this.ProjectOpened_OnClick;
             }
             
             Button newProject = new Button
@@ -140,6 +141,14 @@ namespace View.Panel
 		public void NewProject_OnClick(object? sender, RoutedEventArgs e)
         {
     	        mm.NewProjectEvent();
+        }
+
+        public void ProjectOpened_OnClick(object? sender, RoutedEventArgs e)
+        {
+            if (sender is Button b)
+            {
+    	        mm.ProjectOpenEvent((Project?)b.Tag);
+    	    }
         }
 
 	}
