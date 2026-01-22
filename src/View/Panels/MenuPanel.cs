@@ -25,14 +25,7 @@ namespace View.Panels
 				VerticalAlignment = VerticalAlignment.Center
 			};
 			// Title
-			menu.Children.Add(new TextBlock
-			{
-				Text = "List Project :",
-				FontSize = 30,
-				Foreground = Brushes.Black,
-				HorizontalAlignment = HorizontalAlignment.Center,
-				Margin = new Thickness(0, 20, 0, 30)
-            });
+			menu.Children.Add(SystemStyle.GenerateTitle("List of Projects :"));
 
 			StackPanel projectsContainer = new StackPanel
             {
