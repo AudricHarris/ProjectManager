@@ -66,15 +66,9 @@ namespace Model
 			return ProjectRepository.s_listProject;
 		}
 
-		public static Boolean DeleteProject(int id)
+		public static Boolean DeleteProject(Project p)
 		{
-			if (id >= 0 && id < ProjectRepository.s_listProject.Count)
-			{
-				ProjectRepository.s_listProject.RemoveAt(id);
-				return true;
-			}
-
-			return false;
+			return ProjectRepository.s_listProject.Remove(p);
 		}
 	}
 }

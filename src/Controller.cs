@@ -41,6 +41,15 @@ public class Controller
 		}
 	}
 
+	public void DeleteProject()
+	{
+		if (this._project != null)
+		{
+			ProjectRepository.DeleteProject(this._project);
+			ProjectRepository.Serialize();
+		}
+	}
+
 	override
 	public String ToString()
 	{

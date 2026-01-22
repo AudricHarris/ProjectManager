@@ -16,6 +16,11 @@ namespace View.Panels
 		public MenuPanel(MainWindow window, List<Project> lstProjects, MouseManager mm )
 		{
             this.mm = mm;
+            ScrollViewer scroll = new ScrollViewer
+            {
+                Height = 600,
+                Width = 850
+            };
 
 			StackPanel menu = new StackPanel
 			{
@@ -89,11 +94,26 @@ namespace View.Panels
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(20, 0, 0, 0)
                 };
+                Button delete = new Button
+                {
+                    Content = "🗑️",
+                    Width = 30,
+                    Height = 30,
+                    Background = Brushes.Transparent,
+                    BorderThickness = new Thickness(0),
+                    Foreground = new SolidColorBrush(Color.FromRgb(255,0,0)),
+                    CornerRadius = new CornerRadius(20),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
 
-                Grid.SetColumn(dateBlock, 2);
+                Grid.SetColumn(dateBlock, 1);
+                Grid.SetColumn(delete, 2);
+
 
                 contentGrid.Children.Add(leftInfo);
                 contentGrid.Children.Add(dateBlock);
+                contentGrid.Children.Add(delete);
 
                 projectButton.Content = contentGrid;
 
@@ -102,7 +122,10 @@ namespace View.Panels
 
                 projectsContainer.Children.Add(projectButton);
                 projectButton.Tag = p;
+                delete.Tag = p;
+
                 projectButton.Click += this.ProjectOpened_OnClick;
+                delete.Click += this.DeleteProject_OnClick;
             }
             
             Button newProject = new Button
@@ -123,8 +146,9 @@ namespace View.Panels
             };
 
             newProject.Click += this.NewProject_OnClick;
+            scroll.Content = projectsContainer;
 
-            menu.Children.Add(projectsContainer);
+            menu.Children.Add(scroll);
             menu.Children.Add(newProject);
             Children.Add(menu);
 
@@ -143,6 +167,13 @@ namespace View.Panels
     	        mm.ProjectOpenEvent((Project?)b.Tag);
     	    }
         }
-
+        
+        public void DeleteProject_OnClick(object? sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            Console.WriteLine("Delete");
+            if (sender is Button b)
+                mm.DeleteProject((Project)b.Tag);
+        }
 	}
 }

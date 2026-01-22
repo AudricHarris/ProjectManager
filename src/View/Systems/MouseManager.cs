@@ -41,5 +41,12 @@ namespace View.Systems
         {
 			this.MainWindow.SwitchPanel(new MenuPanel(this.MainWindow, MainWindow.SCtrl.getListProject(), this));
         }
+
+        public void DeleteProject(Project p)
+        {
+        	MainWindow.SCtrl.SetProject(p);
+        	MainWindow.SCtrl.DeleteProject();
+			this.MainWindow.SwitchPanel(new MenuPanel(this.MainWindow, MainWindow.SCtrl.getListProject(), this));
+        }
 	}
 }
