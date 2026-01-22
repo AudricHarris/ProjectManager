@@ -31,7 +31,7 @@ namespace View.Panels
 
 		public void NewProject_OnClick(object? sender, RoutedEventArgs e)
         {
-    	        mm.NewProjectEvent();
+    	        mm.NewProjectEvent(null);
         }
 
 	}

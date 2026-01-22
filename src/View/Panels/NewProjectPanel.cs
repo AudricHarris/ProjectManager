@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Interactivity;
 
 using View.Systems;
+using Model.Containers;
 
 namespace View.Panels
 {
@@ -13,10 +14,12 @@ namespace View.Panels
 	    private MouseManager mm;
 	    private TextBox title;
 	    private TextBox desc;
+        private Project? p;
 
-		public NewProjectPanel(MouseManager mm)
+		public NewProjectPanel(MouseManager mm, Project? p)
 		{
             this.mm = mm;
+            this.p = p;
 
 			StackPanel menu = new StackPanel
 			{
@@ -35,6 +38,7 @@ namespace View.Panels
 
             menu.Children.Add(SystemStyle.GenerateText("Project Description"));
             this.desc = new TextBox{Width = 500, Height = 200, FontSize = 20, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap};
+
             menu.Children.Add(this.desc);
 
             Button newProject = new Button
@@ -71,6 +75,12 @@ namespace View.Panels
                 Margin = new Thickness(0, 5, 0, 5)
             };
 
+            if (p != null)
+            {
+                this.title.Text = p.GetName();
+                this.desc.Text = p.GetDesc();
+                newProject.Content = "Edit";
+            }
             newProject.Click += this.UpdateProject_OnClick;
             CancelProject.Click += this.Cancel_OnClick;
 
@@ -81,7 +91,7 @@ namespace View.Panels
 
 		public void UpdateProject_OnClick(object? sender, RoutedEventArgs e)
         {
-    	        mm.CreateUpdateProject(null, this.title.Text, this.desc.Text );
+    	        mm.CreateUpdateProject(this.p, this.title.Text, this.desc.Text );
         }
 
 		public void Cancel_OnClick(object? sender, RoutedEventArgs e)

@@ -56,8 +56,11 @@ namespace View.Panels
 
                 // Grid inside button to organize content: left info + right date
                 Grid contentGrid = new Grid();
+                contentGrid.ColumnDefinitions.Clear();
                 contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 contentGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
                 // Left side: Name and Description
@@ -94,6 +97,7 @@ namespace View.Panels
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(20, 0, 0, 0)
                 };
+
                 Button delete = new Button
                 {
                     Content = "🗑️",
@@ -107,14 +111,28 @@ namespace View.Panels
                     VerticalAlignment = VerticalAlignment.Center,
                 };
 
-                Grid.SetColumn(dateBlock, 1);
-                Grid.SetColumn(delete, 2);
+                Button edit = new Button
+                {
+                    Content = "🔨",
+                    Width = 30,
+                    Height = 30,
+                    Background = Brushes.Transparent,
+                    BorderThickness = new Thickness(0),
+                    Foreground = new SolidColorBrush(Color.FromRgb(255,255,255)),
+                    CornerRadius = new CornerRadius(20),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
 
+                Grid.SetColumn(dateBlock, 1);
+                Grid.SetColumn(delete, 3);
+                Grid.SetColumn(edit, 2);
 
                 contentGrid.Children.Add(leftInfo);
                 contentGrid.Children.Add(dateBlock);
                 contentGrid.Children.Add(delete);
-
+                contentGrid.Children.Add(edit);
+                
                 projectButton.Content = contentGrid;
 
                 // Optional: hover effect
@@ -123,9 +141,11 @@ namespace View.Panels
                 projectsContainer.Children.Add(projectButton);
                 projectButton.Tag = p;
                 delete.Tag = p;
+                edit.Tag = p;
 
                 projectButton.Click += this.ProjectOpened_OnClick;
                 delete.Click += this.DeleteProject_OnClick;
+                edit.Click += this.EditProject_OnClick;
             }
             
             Button newProject = new Button
@@ -157,7 +177,16 @@ namespace View.Panels
 
 		public void NewProject_OnClick(object? sender, RoutedEventArgs e)
         {
-    	        mm.NewProjectEvent();
+    	        mm.NewProjectEvent(null);
+        }
+
+		public void EditProject_OnClick(object? sender, RoutedEventArgs e)
+        {
+            if (sender is Button b)
+            {
+                e.Handled = true;
+                mm.NewProjectEvent((Project?)b.Tag);
+    	    }
         }
 
         public void ProjectOpened_OnClick(object? sender, RoutedEventArgs e)

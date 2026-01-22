@@ -14,9 +14,9 @@ namespace View.Systems
 			this.MainWindow = window;
 		}
 		
-        public void NewProjectEvent()
+        public void NewProjectEvent(Project? p)
         {
-	        this.MainWindow.SwitchPanel(new NewProjectPanel(this));
+	        this.MainWindow.SwitchPanel(new NewProjectPanel(this, p));
         }
 
         public void CreateUpdateProject(Project? p, String name, String desc)
@@ -24,6 +24,14 @@ namespace View.Systems
 			if ( p == null && MainWindow.SCtrl != null)
 			{
 				MainWindow.SCtrl.SetProject(new Project(name, desc));
+				MainWindow.SCtrl.SaveProject();
+				this.MainWindow.SwitchPanel(new MenuPanel(this.MainWindow, MainWindow.SCtrl.getListProject(), this));
+			}
+			else if ( MainWindow.SCtrl != null)
+			{
+				p.SetDesc(desc);
+				p.SetName(name);
+				MainWindow.SCtrl.SetProject(p);
 				MainWindow.SCtrl.SaveProject();
 				this.MainWindow.SwitchPanel(new MenuPanel(this.MainWindow, MainWindow.SCtrl.getListProject(), this));
 			}
