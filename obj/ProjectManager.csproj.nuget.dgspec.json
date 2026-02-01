@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/wearwqlf/Document/ProjectManager/ProjectManager.csproj": {}
+    "/home/wearwqlf/Documents/ProjectManager/ProjectManager.csproj": {}
   },
   "projects": {
-    "/home/wearwqlf/Document/ProjectManager/ProjectManager.csproj": {
+    "/home/wearwqlf/Documents/ProjectManager/ProjectManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/wearwqlf/Document/ProjectManager/ProjectManager.csproj",
+        "projectUniqueName": "/home/wearwqlf/Documents/ProjectManager/ProjectManager.csproj",
         "projectName": "ProjectManager",
-        "projectPath": "/home/wearwqlf/Document/ProjectManager/ProjectManager.csproj",
+        "projectPath": "/home/wearwqlf/Documents/ProjectManager/ProjectManager.csproj",
         "packagesPath": "/home/wearwqlf/.nuget/packages/",
-        "outputPath": "/home/wearwqlf/Document/ProjectManager/obj/",
+        "outputPath": "/home/wearwqlf/Documents/ProjectManager/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/wearwqlf/.nuget/NuGet/NuGet.Config"
@@ -43,6 +43,32 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
+          "dependencies": {
+            "Avalonia": {
+              "target": "Package",
+              "version": "[11.3.10, )"
+            },
+            "Avalonia.Desktop": {
+              "target": "Package",
+              "version": "[11.3.10, )"
+            },
+            "Avalonia.Diagnostics": {
+              "target": "Package",
+              "version": "[11.3.10, )"
+            },
+            "Avalonia.Fonts.Inter": {
+              "target": "Package",
+              "version": "[11.3.10, )"
+            },
+            "Avalonia.Themes.Fluent": {
+              "target": "Package",
+              "version": "[11.3.10, )"
+            },
+            "System.Reactive": {
+              "target": "Package",
+              "version": "[6.1.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Model.Geometry;
+using Avalonia;
 
 namespace Model.Items
 {
@@ -8,7 +8,7 @@ namespace Model.Items
 	 * Abstract class that handles positioning and properties of an item
 	 */
 	[JsonDerivedType(typeof(StickyNote), typeDiscriminator: "StickyNote")]
-	[JsonDerivedType(typeof(Image), typeDiscriminator: "ImageFile")]
+	[JsonDerivedType(typeof(ImageObject), typeDiscriminator: "ImageFile")]
 	public abstract class BoardItem
 	{
 		public int Id { get; set; }
@@ -16,6 +16,15 @@ namespace Model.Items
 		private int _sizeX;
 		private int _sizeY;
 		private int _zIndex;
+
+		public Point Position => _pos;
+		public int Width => _sizeX;
+		public int Height => _sizeY;
+		public int ZIndex
+		{
+			get => _zIndex;
+			set => _zIndex = value;
+		}
 
 		// Constructeurs
 		public BoardItem(int id, Point pos, int sizeX, int sizeY, int zIndex)
@@ -26,6 +35,9 @@ namespace Model.Items
 			this._sizeY = sizeY;
 			this._zIndex = zIndex;
 		}
+
+		public void SetWidth(int width) { this._sizeX = width; }
+		public void SetHeight(int height) { this._sizeY = height; }
 
 		public void UpdatePos(Point p)
 		{

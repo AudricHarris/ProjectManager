@@ -3,36 +3,187 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Interactivity;
-
 using Model.Containers;
+using Model.Geometry;
+using Model.Items;
+using View.Objects;           // contains StickyNoteControl
 using View.Systems;
+using Avalonia.Media.Imaging;
+using View;
 
 namespace View.Panels
 {
 	public class MindBoardPanel : DockPanel
 	{
-	    private MouseManager mm;
-	    private Project p;
+		private readonly MouseManager _mouseManager;
+		private readonly Project _project;
 
-		public MindBoardPanel(Project p, MouseManager mm )
+		private Canvas _canvas = null!;
+		private StackPanel _toolbar = null!;
+
+		public MindBoardPanel(Project project, MouseManager mouseManager)
 		{
-            this.mm = mm;
-			this.p = p;
+			_project = project ?? throw new ArgumentNullException(nameof(project));
+			_mouseManager = mouseManager ?? throw new ArgumentNullException(nameof(mouseManager));
+
+			Background = SystemStyle.Background; // or replace with SystemStyle.Background
+
+			MainWindow.SCtrl.SetProject(project);
 			
-			TextBlock text = SystemStyle.GenerateTitle(p.GetName());
-			Canvas canva = new Canvas();
-			
-			this.Background = SystemStyle.Background;
+			// ── Title bar ────────────────────────────────────────────────
+			var title = new TextBlock
+			{
+				Text = $"Mind Board: {_project.GetName()}",
+				FontSize = 24,
+				FontWeight = FontWeight.Bold,
+				Margin = new Thickness(16, 12, 16, 8),
+				HorizontalAlignment = HorizontalAlignment.Center
+			};
+			DockPanel.SetDock(title, Dock.Top);
+			Children.Add(title);
 
-			DockPanel.SetDock(text, Dock.Top);
-			this.Children.Add(text);
-			this.Children.Add(canva);
-        }
+			// ── Main area: left toolbar + canvas ─────────────────────────
+			var mainGrid = new Grid
+			{
+				ColumnDefinitions = new ColumnDefinitions("240, *")
+			};
 
-		public void NewProject_OnClick(object? sender, RoutedEventArgs e)
-        {
-    	        mm.NewProjectEvent(null);
-        }
+			// Toolbar (left side)
+			_toolbar = CreateLeftToolbar();
+			Grid.SetColumn(_toolbar, 0);
+			mainGrid.Children.Add(_toolbar);
 
+			// Canvas (main area)
+			_canvas = new Canvas
+			{
+				Background = Brushes.Transparent,
+				ClipToBounds = false
+			};
+			Grid.SetColumn(_canvas, 1);
+			mainGrid.Children.Add(_canvas);
+
+			Children.Add(mainGrid);
+
+			// ── Event subscriptions ───────────────────────────────────────
+			_mouseManager.ItemAdded += OnItemAddedFromManager;
+
+			// ── Load already existing items ──────────────────────────────
+			LoadExistingItems();
+		}
+
+		private StackPanel CreateLeftToolbar()
+		{
+			var panel = new StackPanel
+			{
+				Margin = new Thickness(16),
+				Spacing = 16,
+				Orientation = Orientation.Vertical,
+				Background = SystemStyle.TopBanner
+			};
+
+			// Project header
+			var header = new StackPanel
+			{
+				Orientation = Orientation.Horizontal,
+				Spacing = 12,
+				Margin = new Thickness(0, 0, 0, 20)
+			};
+
+			var icon = new Image
+			{
+				Source = new Bitmap("Icons/mindmap.png"), // ← adjust to your real resource path
+				Width = 36,
+				Height = 36
+			};
+
+			var name = new TextBlock
+			{
+				Text = _project.GetName() ?? "Untitled Project",
+				FontSize = 18,
+				FontWeight = FontWeight.SemiBold,
+				VerticalAlignment = VerticalAlignment.Center
+			};
+
+			header.Children.Add(icon);
+			header.Children.Add(name);
+			panel.Children.Add(header);
+
+			// ── Add Sticky Note button ───────────────────────────────────
+			var btnSticky = new Button
+			{
+				Content = "Add Sticky Note",
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				Padding = new Thickness(12, 10),
+				Margin = new Thickness(0, 4)
+			};
+			btnSticky.Click += AddStickyNote_Click;
+			panel.Children.Add(btnSticky);
+
+
+			return panel;
+		}
+
+		private async void AddStickyNote_Click(object? sender, RoutedEventArgs e)
+		{
+			string defaultText = "New note...";
+
+			var note = new StickyNote(defaultText);
+
+			double offset = 40 + _canvas.Children.Count * 25;
+			note.UpdatePos(new Point(offset, offset));
+
+			_mouseManager.NotifyNewItemCreated(note);
+		}
+
+		private void LoadExistingItems()
+		{
+			foreach (var item in _project.GetLstItemProject())
+			{
+				RenderItem(item);
+			}
+		}
+
+		private void OnItemAddedFromManager(BoardItem item)
+		{
+			_project.AddItem(item);
+			RenderItem(item);
+			Console.WriteLine("Saving Item ADDED");
+			MainWindow.SCtrl.SaveProject();
+		}
+
+		private void RenderItem(BoardItem item)
+		{
+			if (item == null) return;
+
+			Control? visual = item switch
+			{
+				StickyNote note => new StickyNoteControl
+				{
+					Item = note
+				},
+
+
+				_ => new Border
+				{
+					Child = new TextBlock { Text = $"[Unsupported: {item.GetType().Name}]", Foreground = Brushes.Red },
+					Background = Brushes.LightPink,
+					Padding = new Thickness(8)
+				}
+			};
+
+			if (visual != null)
+			{
+				Canvas.SetLeft(visual, item.Position.X);   // assumes Position is public
+				Canvas.SetTop(visual, item.Position.Y);
+
+				_canvas.Children.Add(visual);
+			}
+		}
+
+		protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+		{
+			base.OnDetachedFromVisualTree(e);
+			_mouseManager.ItemAdded -= OnItemAddedFromManager;
+		}
 	}
 }
