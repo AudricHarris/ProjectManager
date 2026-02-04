@@ -1,15 +1,20 @@
+// Avalonia imports
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
+
+//Model
 using Model.Containers;
 using Model.Geometry;
 using Model.Items;
-using View.Objects;           // contains StickyNoteControl
-using View.Systems;
-using Avalonia.Media.Imaging;
+
+//View
 using View;
+using View.Objects;
+using View.Systems;
 
 namespace View.Panels
 {
@@ -26,11 +31,10 @@ namespace View.Panels
 			_project = project ?? throw new ArgumentNullException(nameof(project));
 			_mouseManager = mouseManager ?? throw new ArgumentNullException(nameof(mouseManager));
 
-			Background = SystemStyle.Background; // or replace with SystemStyle.Background
+			Background = SystemStyle.Background;
 
 			MainWindow.SCtrl.SetProject(project);
 			
-			// ── Title bar ────────────────────────────────────────────────
 			var title = new TextBlock
 			{
 				Text = $"Mind Board: {_project.GetName()}",
@@ -42,18 +46,15 @@ namespace View.Panels
 			DockPanel.SetDock(title, Dock.Top);
 			Children.Add(title);
 
-			// ── Main area: left toolbar + canvas ─────────────────────────
 			var mainGrid = new Grid
 			{
 				ColumnDefinitions = new ColumnDefinitions("240, *")
 			};
 
-			// Toolbar (left side)
 			_toolbar = CreateLeftToolbar();
 			Grid.SetColumn(_toolbar, 0);
 			mainGrid.Children.Add(_toolbar);
 
-			// Canvas (main area)
 			_canvas = new Canvas
 			{
 				Background = Brushes.Transparent,
@@ -64,10 +65,8 @@ namespace View.Panels
 
 			Children.Add(mainGrid);
 
-			// ── Event subscriptions ───────────────────────────────────────
 			_mouseManager.ItemAdded += OnItemAddedFromManager;
 
-			// ── Load already existing items ──────────────────────────────
 			LoadExistingItems();
 		}
 
@@ -81,7 +80,6 @@ namespace View.Panels
 				Background = SystemStyle.TopBanner
 			};
 
-			// Project header
 			var header = new StackPanel
 			{
 				Orientation = Orientation.Horizontal,
@@ -91,7 +89,7 @@ namespace View.Panels
 
 			var icon = new Image
 			{
-				Source = new Bitmap("Icons/mindmap.png"), // ← adjust to your real resource path
+				Source = new Bitmap("Icons/mindmap.png"),
 				Width = 36,
 				Height = 36
 			};
@@ -108,7 +106,6 @@ namespace View.Panels
 			header.Children.Add(name);
 			panel.Children.Add(header);
 
-			// ── Add Sticky Note button ───────────────────────────────────
 			var btnSticky = new Button
 			{
 				Content = "Add Sticky Note",
@@ -125,7 +122,7 @@ namespace View.Panels
 
 		private async void AddStickyNote_Click(object? sender, RoutedEventArgs e)
 		{
-			string defaultText = "New note...";
+			string defaultText = "This is a temporary note to test things out.";
 
 			var note = new StickyNote(defaultText);
 
@@ -173,7 +170,7 @@ namespace View.Panels
 
 			if (visual != null)
 			{
-				Canvas.SetLeft(visual, item.Position.X);   // assumes Position is public
+				Canvas.SetLeft(visual, item.Position.X);
 				Canvas.SetTop(visual, item.Position.Y);
 
 				_canvas.Children.Add(visual);

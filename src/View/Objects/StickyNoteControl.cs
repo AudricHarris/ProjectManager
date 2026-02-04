@@ -1,8 +1,11 @@
+//Avalonia
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Input;
+
+//Model
 using Model.Items;
 
 namespace View.Objects
@@ -37,7 +40,7 @@ namespace View.Objects
 
 			_border = new Border
 			{
-				Background = new SolidColorBrush(Color.Parse("#FFF9C4")), // classic sticky yellow
+				Background = new SolidColorBrush(Color.Parse("#FFF9C4")),
 				BorderBrush = new SolidColorBrush(Colors.Orange),
 				BorderThickness = new Thickness(1.5),
 				CornerRadius = new CornerRadius(8),
