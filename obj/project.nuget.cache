@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ifrQuJnzH5o=",
+  "dgSpecHash": "sGQUZTInnSM=",
   "success": true,
   "projectFilePath": "/home/wearwqlf/Documents/ProjectManager/ProjectManager.csproj",
   "expectedPackageFiles": [
@@ -32,7 +32,7 @@
     "/home/wearwqlf/.nuget/packages/skiasharp.nativeassets.win32/2.88.9/skiasharp.nativeassets.win32.2.88.9.nupkg.sha512",
     "/home/wearwqlf/.nuget/packages/system.reactive/6.1.0/system.reactive.6.1.0.nupkg.sha512",
     "/home/wearwqlf/.nuget/packages/tmds.dbus.protocol/0.21.2/tmds.dbus.protocol.0.21.2.nupkg.sha512",
-    "/home/wearwqlf/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.0/microsoft.aspnetcore.app.ref.10.0.0.nupkg.sha512"
+    "/home/wearwqlf/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.3/microsoft.aspnetcore.app.ref.10.0.3.nupkg.sha512"
   ],
   "logs": []
 }
