@@ -1,21 +1,18 @@
-using System.Text.Json.Serialization;
 using Avalonia;
 
 namespace Model.Items
 {
-	/**
-	 * UrlEmbed :
-	 * Embeds a URL (YouTube, website, etc.) as a card on the board
-	 */
 	public class UrlEmbed : BoardItem
 	{
-		public string Url   { get; set; }
-		public string Title { get; set; }
+		public string Url   { get; set; } = "";
+		public string Title { get; set; } = "";
 
-		public UrlEmbed(string url, string title = "") : base(0, new Point(), 320, 220, 0)
+		public UrlEmbed() { }
+
+		public UrlEmbed(string url, string title = "") : base(0, new Point(), 320, 170, 0)
 		{
-			this.Url   = url;
-			this.Title = string.IsNullOrEmpty(title) ? url : title;
+			Url   = url;
+			Title = string.IsNullOrEmpty(title) ? url : title;
 		}
 
 		public bool IsYouTube =>
@@ -28,8 +25,7 @@ namespace Model.Items
 				if (!IsYouTube) return null;
 				if (Url.Contains("youtu.be/"))
 					return Url.Split("youtu.be/").LastOrDefault()?.Split('?')[0];
-				var v = Url.Split("v=").LastOrDefault()?.Split('&')[0];
-				return v;
+				return Url.Split("v=").LastOrDefault()?.Split('&')[0];
 			}
 		}
 

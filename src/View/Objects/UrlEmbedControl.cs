@@ -2,27 +2,24 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Input;
-
+using Avalonia.Layout;
 using Model.Items;
 
 namespace View.Objects
 {
 	/// <summary>
-	/// Renders a URL embed card on the canvas. Shows YouTube info or a generic link card.
-	/// Supports drag to move.
+	/// URL embed card. Clicking the link button opens the URL in the default browser.
+	/// YouTube links show the embed ID and a dedicated "Open on YouTube" button.
 	/// </summary>
-	public class UrlEmbedControl : Canvas
+	public class UrlEmbedControl : ItemControlBase
 	{
 		public UrlEmbed Item { get; private set; }
-
-		private bool  _dragging;
-		private Point _dragOffset;
 
 		public UrlEmbedControl(UrlEmbed item)
 		{
 			Item   = item;
 			Width  = 320;
-			Height = item.IsYouTube ? 200 : 100;
+			Height = item.IsYouTube ? 170 : 120;
 
 			Effect = new DropShadowEffect
 			{
@@ -38,6 +35,7 @@ namespace View.Objects
 
 			Build();
 			Cursor = new Cursor(StandardCursorType.SizeAll);
+			InitHandles();
 		}
 
 		private void Build()
@@ -53,29 +51,27 @@ namespace View.Objects
 
 			var stack = new StackPanel { Spacing = 8 };
 
-			// Icon + title row
+			// Icon + type
 			var header = new StackPanel
 			{
-				Orientation = Avalonia.Layout.Orientation.Horizontal,
+				Orientation = Orientation.Horizontal,
 				Spacing     = 8
 			};
-
 			string icon = Item.IsYouTube ? "▶️" : "🔗";
 			header.Children.Add(new TextBlock
 			{
 				Text      = icon,
 				FontSize  = 20,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+				VerticalAlignment = VerticalAlignment.Center
 			});
 			header.Children.Add(new TextBlock
 			{
-				Text         = Item.IsYouTube ? "YouTube Video" : "Link",
-				Foreground   = new SolidColorBrush(Color.Parse("#AAAAFF")),
-				FontSize     = 13,
-				FontWeight   = FontWeight.SemiBold,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+				Text       = Item.IsYouTube ? "YouTube Video" : "Link",
+				Foreground = new SolidColorBrush(Color.Parse("#AAAAFF")),
+				FontSize   = 13,
+				FontWeight = FontWeight.SemiBold,
+				VerticalAlignment = VerticalAlignment.Center
 			});
-
 			stack.Children.Add(header);
 
 			// Title
@@ -89,67 +85,75 @@ namespace View.Objects
 				MaxWidth     = 280
 			});
 
-			// URL (truncated)
-			var urlText = Item.Url.Length > 50 ? Item.Url.Substring(0, 47) + "…" : Item.Url;
+			// URL (truncated display)
+			var urlDisplay = Item.Url.Length > 48 ? Item.Url.Substring(0, 45) + "…" : Item.Url;
 			stack.Children.Add(new TextBlock
 			{
-				Text       = urlText,
+				Text       = urlDisplay,
 				Foreground = new SolidColorBrush(Color.Parse("#777799")),
-				FontSize   = 11,
-				TextWrapping = TextWrapping.NoWrap
+				FontSize   = 11
 			});
 
-			if (Item.IsYouTube && Item.YouTubeEmbedId != null)
+			// Buttons row
+			var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+
+			if (Item.IsYouTube)
 			{
-				var thumbNote = new TextBlock
+				var ytBtn = MakeActionButton("▶  Open on YouTube", "#CC2222");
+				ytBtn.Click += (_, _) => OpenUrl(Item.Url);
+				buttons.Children.Add(ytBtn);
+
+				if (Item.YouTubeEmbedId != null)
 				{
-					Text       = $"🎬  youtu.be/{Item.YouTubeEmbedId}",
-					Foreground = new SolidColorBrush(Color.Parse("#FF4444")),
-					FontSize   = 12,
-					Margin     = new Thickness(0, 4, 0, 0)
-				};
-				stack.Children.Add(thumbNote);
+					stack.Children.Add(new TextBlock
+					{
+						Text       = $"🎬  ID: {Item.YouTubeEmbedId}",
+						Foreground = new SolidColorBrush(Color.Parse("#FF6666")),
+						FontSize   = 11
+					});
+				}
+			}
+			else
+			{
+				var linkBtn = MakeActionButton("🔗  Open Link", "#444499");
+				linkBtn.Click += (_, _) => OpenUrl(Item.Url);
+				buttons.Children.Add(linkBtn);
 			}
 
+			stack.Children.Add(buttons);
 			border.Child = stack;
 			Children.Add(border);
 		}
 
-		protected override void OnPointerPressed(PointerPressedEventArgs e)
+		private static Button MakeActionButton(string label, string bg) => new Button
 		{
-			base.OnPointerPressed(e);
-			if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+			Content         = label,
+			Height          = 28,
+			FontSize        = 12,
+			FontWeight      = FontWeight.SemiBold,
+			Background      = new SolidColorBrush(Color.Parse(bg)),
+			Foreground      = Brushes.White,
+			Padding         = new Thickness(10, 4),
+			CornerRadius    = new CornerRadius(6),
+			BorderThickness = new Thickness(0)
+		};
+
+		private static void OpenUrl(string url)
+		{
+			try
 			{
-				_dragging   = true;
-				_dragOffset = e.GetPosition(this);
-				e.Pointer.Capture(this);
-				e.Handled = true;
+				System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+				{
+					FileName        = url,
+					UseShellExecute = true
+				});
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Open URL error: {ex.Message}");
 			}
 		}
 
-		protected override void OnPointerMoved(PointerEventArgs e)
-		{
-			base.OnPointerMoved(e);
-			if (_dragging && Parent is Canvas canvas)
-			{
-				var pos  = e.GetPosition(canvas);
-				double x = pos.X - _dragOffset.X;
-				double y = pos.Y - _dragOffset.Y;
-				Canvas.SetLeft(this, x);
-				Canvas.SetTop(this, y);
-				Item.UpdatePos(new Point(x, y));
-				e.Handled = true;
-			}
-		}
-
-		protected override void OnPointerReleased(PointerReleasedEventArgs e)
-		{
-			base.OnPointerReleased(e);
-			if (_dragging)
-			{
-				_dragging = false;
-				e.Pointer.Capture(null);
-			}
-		}
+		protected override void OnPositionChanged(Point p) => Item.UpdatePos(p);
 	}
 }

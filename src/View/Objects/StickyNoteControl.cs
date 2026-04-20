@@ -1,18 +1,12 @@
-// Avalonia
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Input;
-
-// Model
 using Model.Items;
 
 namespace View.Objects
 {
-	/// <summary>
-	/// Sticky note visual — drag to move, double-click or context-menu to edit.
-	/// </summary>
-	public class StickyNoteControl : Canvas
+	public class StickyNoteControl : ItemControlBase
 	{
 		public static readonly StyledProperty<StickyNote> ItemProperty =
 			AvaloniaProperty.Register<StickyNoteControl, StickyNote>(nameof(Item));
@@ -25,8 +19,6 @@ namespace View.Objects
 
 		private readonly TextBlock _textBlock;
 		private readonly Border    _border;
-		private          bool      _dragging;
-		private          Point     _dragOffset;
 
 		public StickyNoteControl()
 		{
@@ -64,8 +56,10 @@ namespace View.Objects
 
 			this.GetObservable(ItemProperty).Subscribe(UpdateFromModel);
 			Cursor = new Cursor(StandardCursorType.SizeAll);
-			
-			DoubleTapped += (sender, e) =>
+
+			InitHandles();
+
+			DoubleTapped += (_, e) =>
 			{
 				OpenEditPopup();
 				e.Handled = true;
@@ -82,44 +76,11 @@ namespace View.Objects
 			_textBlock.Text = note.Text ?? "";
 		}
 
-		// ── Drag ─────────────────────────────────────────────────────────────────
-		protected override void OnPointerPressed(PointerPressedEventArgs e)
+		protected override void OnPositionChanged(Point p) => Item?.UpdatePos(p);
+		protected override void OnRotationChanged(double deg)
 		{
-			base.OnPointerPressed(e);
-			if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-			{
-				_dragging   = true;
-				_dragOffset = e.GetPosition(this);
-				e.Pointer.Capture(this);
-				e.Handled = true;
-			}
+			// StickyNote doesn't have Rotation property in model yet; just visual
 		}
-
-		protected override void OnPointerMoved(PointerEventArgs e)
-		{
-			base.OnPointerMoved(e);
-			if (_dragging && Parent is Canvas canvas)
-			{
-				var pos  = e.GetPosition(canvas);
-				double x = pos.X - _dragOffset.X;
-				double y = pos.Y - _dragOffset.Y;
-				Canvas.SetLeft(this, x);
-				Canvas.SetTop(this, y);
-				Item?.UpdatePos(new Point(x, y));
-				e.Handled = true;
-			}
-		}
-
-		protected override void OnPointerReleased(PointerReleasedEventArgs e)
-		{
-			base.OnPointerReleased(e);
-			if (_dragging)
-			{
-				_dragging = false;
-				e.Pointer.Capture(null);
-			}
-		}
-
 
 		public void OpenEditPopup()
 		{

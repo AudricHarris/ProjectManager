@@ -3,20 +3,13 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Input;
-
 using Model.Items;
 
 namespace View.Objects
 {
-	/// <summary>
-	/// Renders an ImageObject on the canvas with drag-to-move.
-	/// </summary>
-	public class ImageControl : Canvas
+	public class ImageControl : ItemControlBase
 	{
 		public ImageObject Item { get; private set; }
-
-		private bool  _dragging;
-		private Point _dragOffset;
 
 		public ImageControl(ImageObject item)
 		{
@@ -38,6 +31,7 @@ namespace View.Objects
 
 			Build();
 			Cursor = new Cursor(StandardCursorType.SizeAll);
+			InitHandles();
 		}
 
 		private void Build()
@@ -53,7 +47,6 @@ namespace View.Objects
 
 			var stack = new StackPanel { Spacing = 4 };
 
-			// Try to load image
 			try
 			{
 				if (File.Exists(Item.Path))
@@ -90,56 +83,20 @@ namespace View.Objects
 				});
 			}
 
-			// Filename label
 			stack.Children.Add(new TextBlock
 			{
-				Text       = Item.Name,
-				Foreground = Brushes.LightGray,
-				FontSize   = 11,
+				Text         = Item.Name,
+				Foreground   = Brushes.LightGray,
+				FontSize     = 11,
 				TextTrimming = TextTrimming.CharacterEllipsis,
-				MaxWidth   = Width - 16,
-				Margin     = new Thickness(4, 0, 4, 4)
+				MaxWidth     = Width - 16,
+				Margin       = new Thickness(4, 0, 4, 4)
 			});
 
 			border.Child = stack;
 			Children.Add(border);
 		}
 
-		protected override void OnPointerPressed(PointerPressedEventArgs e)
-		{
-			base.OnPointerPressed(e);
-			if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-			{
-				_dragging   = true;
-				_dragOffset = e.GetPosition(this);
-				e.Pointer.Capture(this);
-				e.Handled = true;
-			}
-		}
-
-		protected override void OnPointerMoved(PointerEventArgs e)
-		{
-			base.OnPointerMoved(e);
-			if (_dragging && Parent is Canvas canvas)
-			{
-				var pos  = e.GetPosition(canvas);
-				double x = pos.X - _dragOffset.X;
-				double y = pos.Y - _dragOffset.Y;
-				Canvas.SetLeft(this, x);
-				Canvas.SetTop(this, y);
-				Item.UpdatePos(new Point(x, y));
-				e.Handled = true;
-			}
-		}
-
-		protected override void OnPointerReleased(PointerReleasedEventArgs e)
-		{
-			base.OnPointerReleased(e);
-			if (_dragging)
-			{
-				_dragging = false;
-				e.Pointer.Capture(null);
-			}
-		}
+		protected override void OnPositionChanged(Point p) => Item.UpdatePos(p);
 	}
 }

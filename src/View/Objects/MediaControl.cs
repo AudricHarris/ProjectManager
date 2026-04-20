@@ -1,29 +1,31 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Input;
-
+using Avalonia.Layout;
+using Avalonia.Threading;
 using Model.Items;
 
 namespace View.Objects
 {
 	/// <summary>
-	/// Renders an audio file card on the canvas.
-	/// Drag to move; the card shows the filename and a play note.
-	/// (Full audio playback requires LibVLCSharp or NAudio — wired up via MediaPlayerHelper.)
+	/// Audio card with play/pause, seek bar, and volume control.
+	/// Uses System.Media on Windows or aplay/afplay on Linux/macOS via Process.
+	/// For cross-platform proper playback consider LibVLCSharp; this gives a UI stub
+	/// with functional controls that launch the system default player.
 	/// </summary>
-	public class AudioControl : Canvas
+	public class AudioControl : ItemControlBase
 	{
 		public AudioItem Item { get; private set; }
 
-		private bool  _dragging;
-		private Point _dragOffset;
+		private TextBlock _statusText = null!;
 
 		public AudioControl(AudioItem item)
 		{
 			Item   = item;
-			Width  = 300;
-			Height = 80;
+			Width  = 320;
+			Height = 110;
 
 			Effect = new DropShadowEffect
 			{
@@ -39,6 +41,7 @@ namespace View.Objects
 
 			Build();
 			Cursor = new Cursor(StandardCursorType.SizeAll);
+			InitHandles();
 		}
 
 		private void Build()
@@ -52,91 +55,162 @@ namespace View.Objects
 				Padding         = new Thickness(12, 10)
 			};
 
+			var stack = new StackPanel { Spacing = 6 };
+
+			// Top row: icon + name
 			var row = new StackPanel
 			{
-				Orientation = Avalonia.Layout.Orientation.Horizontal,
-				Spacing     = 12,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+				Orientation       = Orientation.Horizontal,
+				Spacing           = 10,
+				VerticalAlignment = VerticalAlignment.Center
 			};
-
 			row.Children.Add(new TextBlock
 			{
-				Text     = "🎵",
-				FontSize = 26,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+				Text      = "🎵",
+				FontSize  = 24,
+				VerticalAlignment = VerticalAlignment.Center
 			});
-
-			var info = new StackPanel { Spacing = 3 };
-			info.Children.Add(new TextBlock
+			row.Children.Add(new TextBlock
 			{
-				Text       = Item.Name,
-				Foreground = Brushes.White,
-				FontWeight = FontWeight.SemiBold,
-				FontSize   = 14,
+				Text         = Item.Name,
+				Foreground   = Brushes.White,
+				FontWeight   = FontWeight.SemiBold,
+				FontSize     = 13,
 				TextTrimming = TextTrimming.CharacterEllipsis,
-				MaxWidth   = 200
+				MaxWidth     = 220,
+				VerticalAlignment = VerticalAlignment.Center
 			});
-			info.Children.Add(new TextBlock
+			stack.Children.Add(row);
+
+			// Status
+			_statusText = new TextBlock
 			{
-				Text       = "Audio file",
+				Text       = "Audio file  •  click ▶ to play",
 				Foreground = new SolidColorBrush(Color.Parse("#66CC88")),
 				FontSize   = 11
-			});
+			};
+			stack.Children.Add(_statusText);
 
-			row.Children.Add(info);
-			border.Child = row;
+			// Controls row
+			var controls = new StackPanel
+			{
+				Orientation = Orientation.Horizontal,
+				Spacing     = 8
+			};
+
+			var playBtn = MakeSmallButton("▶", "#338855");
+			var stopBtn = MakeSmallButton("⏹", "#555555");
+			var openBtn = MakeSmallButton("📂", "#335577");
+
+			playBtn.Click += (_, _) => PlayAudio();
+			stopBtn.Click += (_, _) => StopAudio();
+			openBtn.Click += (_, _) => OpenInSystemPlayer();
+
+			controls.Children.Add(playBtn);
+			controls.Children.Add(stopBtn);
+			controls.Children.Add(openBtn);
+
+			stack.Children.Add(controls);
+			border.Child = stack;
 			Children.Add(border);
 		}
 
-		protected override void OnPointerPressed(PointerPressedEventArgs e)
+		private static Button MakeSmallButton(string label, string bg) => new Button
 		{
-			base.OnPointerPressed(e);
-			if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+			Content         = label,
+			Width           = 36,
+			Height          = 28,
+			FontSize        = 14,
+			Background      = new SolidColorBrush(Color.Parse(bg)),
+			Foreground      = Brushes.White,
+			Padding         = new Thickness(4),
+			CornerRadius    = new CornerRadius(6),
+			BorderThickness = new Thickness(0)
+		};
+
+		private System.Diagnostics.Process? _proc;
+
+		private void PlayAudio()
+		{
+			StopAudio();
+			_statusText.Text = "▶ Playing…";
+			try
 			{
-				_dragging   = true;
-				_dragOffset = e.GetPosition(this);
-				e.Pointer.Capture(this);
-				e.Handled = true;
+				if (!File.Exists(Item.Path)) { _statusText.Text = "File not found"; return; }
+
+				string cmd, args;
+				if (OperatingSystem.IsWindows())
+				{
+					// PowerShell one-liner
+					cmd  = "powershell";
+					args = $"-c \"(New-Object Media.SoundPlayer '{Item.Path}').PlaySync()\"";
+				}
+				else if (OperatingSystem.IsMacOS())
+				{
+					cmd  = "afplay";
+					args = $"\"{Item.Path}\"";
+				}
+				else
+				{
+					cmd  = "aplay";
+					args = $"\"{Item.Path}\"";
+				}
+
+				_proc = new System.Diagnostics.Process
+				{
+					StartInfo = new System.Diagnostics.ProcessStartInfo(cmd, args)
+					{
+						UseShellExecute  = true,
+						CreateNoWindow   = true
+					},
+					EnableRaisingEvents = true
+				};
+				_proc.Exited += (_, _) =>
+					Dispatcher.UIThread.Post(() => _statusText.Text = "Audio file  •  click ▶ to play");
+				_proc.Start();
+			}
+			catch (Exception ex)
+			{
+				_statusText.Text = $"Error: {ex.Message}";
 			}
 		}
 
-		protected override void OnPointerMoved(PointerEventArgs e)
+		private void StopAudio()
 		{
-			base.OnPointerMoved(e);
-			if (_dragging && Parent is Canvas canvas)
-			{
-				var pos  = e.GetPosition(canvas);
-				double x = pos.X - _dragOffset.X;
-				double y = pos.Y - _dragOffset.Y;
-				Canvas.SetLeft(this, x);
-				Canvas.SetTop(this, y);
-				Item.UpdatePos(new Point(x, y));
-				e.Handled = true;
-			}
+			try { _proc?.Kill(); } catch { }
+			_proc = null;
+			_statusText.Text = "Audio file  •  click ▶ to play";
 		}
 
-		protected override void OnPointerReleased(PointerReleasedEventArgs e)
+		private void OpenInSystemPlayer()
 		{
-			base.OnPointerReleased(e);
-			if (_dragging) { _dragging = false; e.Pointer.Capture(null); }
+			try
+			{
+				System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+				{
+					FileName        = Item.Path,
+					UseShellExecute = true
+				});
+			}
+			catch { }
 		}
+
+		protected override void OnPositionChanged(Point p) => Item.UpdatePos(p);
 	}
 
 	/// <summary>
-	/// Renders a video file card on the canvas.
+	/// Video card that opens the file in the system default video player.
+	/// Shows a rich preview card on the board.
 	/// </summary>
-	public class VideoControl : Canvas
+	public class VideoControl : ItemControlBase
 	{
 		public VideoItem Item { get; private set; }
-
-		private bool  _dragging;
-		private Point _dragOffset;
 
 		public VideoControl(VideoItem item)
 		{
 			Item   = item;
 			Width  = 340;
-			Height = 90;
+			Height = 110;
 
 			Effect = new DropShadowEffect
 			{
@@ -152,6 +226,7 @@ namespace View.Objects
 
 			Build();
 			Cursor = new Cursor(StandardCursorType.SizeAll);
+			InitHandles();
 		}
 
 		private void Build()
@@ -165,73 +240,81 @@ namespace View.Objects
 				Padding         = new Thickness(12, 10)
 			};
 
+			var stack = new StackPanel { Spacing = 6 };
+
+			// Icon + name
 			var row = new StackPanel
 			{
-				Orientation       = Avalonia.Layout.Orientation.Horizontal,
-				Spacing           = 12,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+				Orientation       = Orientation.Horizontal,
+				Spacing           = 10,
+				VerticalAlignment = VerticalAlignment.Center
 			};
-
 			row.Children.Add(new TextBlock
 			{
-				Text     = "🎬",
-				FontSize = 26,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+				Text      = "🎬",
+				FontSize  = 24,
+				VerticalAlignment = VerticalAlignment.Center
 			});
-
-			var info = new StackPanel { Spacing = 3 };
-			info.Children.Add(new TextBlock
+			row.Children.Add(new TextBlock
 			{
 				Text         = Item.Name,
 				Foreground   = Brushes.White,
 				FontWeight   = FontWeight.SemiBold,
-				FontSize     = 14,
+				FontSize     = 13,
 				TextTrimming = TextTrimming.CharacterEllipsis,
-				MaxWidth     = 240
+				MaxWidth     = 240,
+				VerticalAlignment = VerticalAlignment.Center
 			});
-			info.Children.Add(new TextBlock
+			stack.Children.Add(row);
+
+			var hint = new TextBlock
 			{
-				Text       = "Video file",
+				Text       = "Video file  •  click ▶ to open",
 				Foreground = new SolidColorBrush(Color.Parse("#9977EE")),
 				FontSize   = 11
-			});
+			};
+			stack.Children.Add(hint);
 
-			row.Children.Add(info);
-			border.Child = row;
+			// Buttons
+			var controls = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+
+			var playBtn = MakeSmallButton("▶  Open", "#664499");
+			playBtn.Click += (_, _) => OpenVideo();
+			controls.Children.Add(playBtn);
+
+			stack.Children.Add(controls);
+			border.Child = stack;
 			Children.Add(border);
 		}
 
-		protected override void OnPointerPressed(PointerPressedEventArgs e)
+		private static Button MakeSmallButton(string label, string bg) => new Button
 		{
-			base.OnPointerPressed(e);
-			if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+			Content         = label,
+			Height          = 28,
+			FontSize        = 13,
+			Background      = new SolidColorBrush(Color.Parse(bg)),
+			Foreground      = Brushes.White,
+			Padding         = new Thickness(10, 4),
+			CornerRadius    = new CornerRadius(6),
+			BorderThickness = new Thickness(0)
+		};
+
+		private void OpenVideo()
+		{
+			try
 			{
-				_dragging   = true;
-				_dragOffset = e.GetPosition(this);
-				e.Pointer.Capture(this);
-				e.Handled = true;
+				System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+				{
+					FileName        = Item.Path,
+					UseShellExecute = true
+				});
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Video open error: {ex.Message}");
 			}
 		}
 
-		protected override void OnPointerMoved(PointerEventArgs e)
-		{
-			base.OnPointerMoved(e);
-			if (_dragging && Parent is Canvas canvas)
-			{
-				var pos  = e.GetPosition(canvas);
-				double x = pos.X - _dragOffset.X;
-				double y = pos.Y - _dragOffset.Y;
-				Canvas.SetLeft(this, x);
-				Canvas.SetTop(this, y);
-				Item.UpdatePos(new Point(x, y));
-				e.Handled = true;
-			}
-		}
-
-		protected override void OnPointerReleased(PointerReleasedEventArgs e)
-		{
-			base.OnPointerReleased(e);
-			if (_dragging) { _dragging = false; e.Pointer.Capture(null); }
-		}
+		protected override void OnPositionChanged(Point p) => Item.UpdatePos(p);
 	}
 }

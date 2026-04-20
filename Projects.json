@@ -4,71 +4,23 @@
     "Name": "Nexus Language",
     "Desc": "Nexus is a home-made programming language by wqlf",
     "DateCreation": "2026-02-01T23:41:50.5842026+01:00",
+    "LstItemProject": []
+  },
+  {
+    "Id": 2,
+    "Name": "Crossline",
+    "Desc": "A game made by friend",
+    "DateCreation": "2026-03-12T23:09:21.2812623+01:00",
     "LstItemProject": [
-      {
-        "$type": "ImageFile",
-        "Name": "Texture.png",
-        "Path": "/home/wearwqlf/.var/app/org.vinegarhq.Vinegar/data/vinegar/prefixes/studio/drive_c/users/wearwqlf/Documents/Texture.png",
-        "Id": 0,
-        "Position": {
-          "X": 1196,
-          "Y": 169
-        },
-        "Width": 240,
-        "Height": 200,
-        "ZIndex": 0
-      },
-      {
-        "$type": "StickyNote",
-        "Text": "Icon",
-        "Id": 0,
-        "Position": {
-          "X": 1194,
-          "Y": 382.921875
-        },
-        "Width": 0,
-        "Height": 0,
-        "ZIndex": 0
-      },
-      {
-        "$type": "VideoItem",
-        "Name": "Crossline.mp4",
-        "Path": "/home/wearwqlf/Videos/Crossline.mp4",
-        "Id": 0,
-        "Position": {
-          "X": 783,
-          "Y": 329
-        },
-        "Width": 400,
-        "Height": 260,
-        "ZIndex": 0
-      },
-      {
-        "$type": "UrlEmbed",
-        "Url": "https://www.youtube.com/watch?v=OIBODIPC_8Y\u0026list=RDOIBODIPC_8Y\u0026start_radio=1",
-        "Title": "Matt",
-        "IsYouTube": true,
-        "YouTubeEmbedId": "OIBODIPC_8Y",
-        "Id": 0,
-        "Position": {
-          "X": 785,
-          "Y": 174
-        },
-        "Width": 320,
-        "Height": 220,
-        "ZIndex": 0
-      },
       {
         "$type": "AudioItem",
         "Name": "crepe.mp3",
         "Path": "/home/wearwqlf/Downloads/crepe.mp3",
         "Id": 0,
-        "Position": {
-          "X": 1005,
-          "Y": 398
-        },
+        "PosX": 80,
+        "PosY": 80,
         "Width": 300,
-        "Height": 80,
+        "Height": 110,
         "ZIndex": 0
       }
     ]
